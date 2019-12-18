@@ -5,7 +5,7 @@ import glob
 
 setuptools.setup(
     name='PyDomainExtractor',
-    version='0.2.0',
+    version='0.2.1',
     author='Gal Ben David',
     author_email='wavenator@gmail.com',
     url='https://github.com/wavenator/PyDomainExtractor',

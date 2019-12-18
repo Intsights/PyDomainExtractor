@@ -210,38 +210,6 @@ static PyObject * extract(
 
     auto extracted_domain = domain_extractor->extract(input);
 
-    // auto tuple = PyTuple_New(3);
-
-    // PyTuple_SET_ITEM(
-    //     tuple,
-    //     0,
-    //     PyUnicode_DecodeUTF8(
-    //         std::get<0>(extracted_domain).data(),
-    //         std::get<0>(extracted_domain).size(),
-    //         NULL
-    //     )
-    // );
-    // PyTuple_SET_ITEM(
-    //     tuple,
-    //     1,
-    //     PyUnicode_DecodeUTF8(
-    //         std::get<1>(extracted_domain).data(),
-    //         std::get<1>(extracted_domain).size(),
-    //         NULL
-    //     )
-    // );
-    // PyTuple_SET_ITEM(
-    //     tuple,
-    //     2,
-    //     PyUnicode_DecodeUTF8(
-    //         std::get<2>(extracted_domain).data(),
-    //         std::get<2>(extracted_domain).size(),
-    //         NULL
-    //     )
-    // );
-
-    // return tuple;
-
     PyObject * dict = PyDict_New();
 
     PyObject * subdomain_py = PyUnicode_DecodeUTF8(
