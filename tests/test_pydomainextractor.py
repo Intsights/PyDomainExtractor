@@ -226,6 +226,45 @@ class DomainExtractorExtractionTestCase(
             },
         )
 
+    def test_upper_case(
+        self,
+    ):
+        self.assertEqual(
+            first=pydomainextractor.extract('domain.Com'),
+            second={
+                'domain': 'domain',
+                'subdomain': '',
+                'suffix': 'com',
+            },
+        )
+
+        self.assertEqual(
+            first=pydomainextractor.extract('DOmain.Com'),
+            second={
+                'domain': 'domain',
+                'subdomain': '',
+                'suffix': 'com',
+            },
+        )
+
+        self.assertEqual(
+            first=pydomainextractor.extract('DOmain.COM'),
+            second={
+                'domain': 'domain',
+                'subdomain': '',
+                'suffix': 'com',
+            },
+        )
+
+        self.assertEqual(
+            first=pydomainextractor.extract('a.b.bla.CK'),
+            second={
+                'domain': 'b',
+                'subdomain': 'a',
+                'suffix': 'bla.ck',
+            },
+        )
+
 
 class DomainExtractorLoadTestCase(
     unittest.TestCase,

@@ -57,8 +57,14 @@ class DomainExtractor {
         const inline std::tuple<std::string_view, std::string_view, std::string_view> extract(
             std::string_view domain
         ) noexcept {
-            std::string_view domain_part;
+            for (auto & domain_char : domain) {
+                if (domain_char >= 'A' && domain_char <= 'Z') {
+                    const_cast<char&>(domain_char) = domain_char + 32;
+                }
+            }
             std::string_view extracted_suffix = this->extract_suffix(domain);
+
+            std::string_view domain_part;
             if (extracted_suffix.empty()) {
                 domain_part = domain;
             } else if (extracted_suffix.size() == domain.size()) {
