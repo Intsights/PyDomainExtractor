@@ -1,18 +1,12 @@
 name: Build
-on:
-  push:
-    tags:
-    - '*'
-
+on: [push, pull_request]
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7]
-
+        python-version: [3.6, 3.7, 3.8]
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python ${{ matrix.python-version }}
@@ -21,17 +15,31 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Ubuntu packages
       run: >-
-        sudo apt install python3-dev libidn2-dev g++-8;
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8;
-    - name: Build a binary wheel and a source tarball
-      run: >-
-        python3 -m pip install --user --upgrade setuptools;
-        python3 setup.py sdist;
+        sudo apt install libidn2-dev g++-9;
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9;
+        python -m pip install --user --upgrade setuptools;
     - name: Test module
       run: >-
-        python3 setup.py test
+        python setup.py test
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Install Ubuntu packages
+      run: >-
+        sudo apt install libidn2-dev g++-9;
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9;
+    - name: Build a binary wheel and a source tarball
+      run: >-
+        python -m pip install --user --upgrade setuptools;
+        python setup.py sdist;
     - name: Publish distribution 📦 to PyPI
-      if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
       uses: pypa/gh-action-pypi-publish@master
       with:
         password: ${{ secrets.pypi_password }}

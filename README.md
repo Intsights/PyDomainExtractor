@@ -40,11 +40,11 @@ PyDomainExtractor is a library intended for parsing domain names into their part
 
 Test was measured on a file containing 10 million random domains from various TLDs
 
-| Library  | Function | Time |
-| ------------- | ------------- | ------------- |
-| [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 67.0s |
-| [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_tld | 25.8s |
-| [PyDomainExtractor](https://github.com/wavenator/PyDomainExtractor) | pydomainextractor.extract | 2.76s |
+| Library  | Function | Time | Improvement Factor |
+| ------------- | ------------- | ------------- | ------------- |
+| [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 67.0s | 1.0x |
+| [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_tld | 25.8s | 2.6x |
+| [PyDomainExtractor](https://github.com/wavenator/PyDomainExtractor) | pydomainextractor.extract | 2.76s | 24.3x |
 
 ### Prerequisites
 
@@ -55,7 +55,7 @@ sudo dnf install python3-devel libidn2-devel gcc-c++
 ```
 * Ubuntu 18.04
 ```sh
-sudo apt install python3-dev libidn2-dev g++-8
+sudo apt install python3-dev libidn2-dev g++-9
 ```
 
 ### Installation
