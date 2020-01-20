@@ -1,6 +1,6 @@
 <p align="center">
-    <a href="https://github.com/wavenator/PyDomainExtractor">
-        <img src="https://raw.githubusercontent.com/wavenator/PyDomainExtractor/master/images/logo.png" alt="Logo">
+    <a href="https://github.com/Intsights/PyDomainExtractor">
+        <img src="https://raw.githubusercontent.com/Intsights/PyDomainExtractor/master/images/logo.png" alt="Logo">
     </a>
     <h3 align="center">
         Highly optimized domain name extraction library written in C++
@@ -9,7 +9,7 @@
 
 ![license](https://img.shields.io/badge/MIT-License-blue)
 ![Python](https://img.shields.io/badge/Python-3.6%20%7C%203.7%20%7C%203.8-blue)
-![Build](https://github.com/wavenator/PyDomainExtractor/workflows/Build/badge.svg)
+![Build](https://github.com/Intsights/PyDomainExtractor/workflows/Build/badge.svg)
 [![PyPi](https://img.shields.io/pypi/v/PyDomainExtractor.svg)](https://pypi.org/project/PyDomainExtractor/)
 
 ## Table of Contents
@@ -44,7 +44,7 @@ Test was measured on a file containing 10 million random domains from various TL
 | ------------- | ------------- | ------------- | ------------- |
 | [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 67.0s | 1.0x |
 | [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_tld | 25.8s | 2.6x |
-| [PyDomainExtractor](https://github.com/wavenator/PyDomainExtractor) | pydomainextractor.extract | 2.76s | 24.3x |
+| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 2.76s | 24.3x |
 
 ### Prerequisites
 
@@ -113,9 +113,9 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Gal Ben David - wavenator@gmail.com
+Gal Ben David - gal@intsights.com
 
-Project Link: [https://github.com/wavenator/PyDomainExtractor](https://github.com/wavenator/PyDomainExtractor)
+Project Link: [https://github.com/Intsights/PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor)
 
 
 

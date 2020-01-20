@@ -7,10 +7,10 @@ setuptools.setup(
     name='PyDomainExtractor',
     version='0.2.3',
     author='Gal Ben David',
-    author_email='wavenator@gmail.com',
-    url='https://github.com/wavenator/PyDomainExtractor',
+    author_email='gal@intsights.com',
+    url='https://github.com/Intsights/PyDomainExtractor',
     project_urls={
-        'Source': 'https://github.com/wavenator/PyDomainExtractor',
+        'Source': 'https://github.com/Intsights/PyDomainExtractor',
     },
     license='MIT',
     description='Highly optimized Domain Name Extraction library written in C++',
