@@ -246,7 +246,7 @@ wa.au
 // 3LDs
 act.edu.au
 catholic.edu.au
-eq.edu.au
+// eq.edu.au - Removed at the request of the Queensland Department of Education
 nsw.edu.au
 nt.edu.au
 qld.edu.au
@@ -987,8 +987,19 @@ fi
 // TODO: Check for updates (expected to be phased out around Q1/2009)
 aland.fi
 
-// fj : https://en.wikipedia.org/wiki/.fj
-*.fj
+// fj : http://domains.fj/
+// Submitted by registry <garth.miller@cocca.org.nz> 2020-02-11
+fj
+ac.fj
+biz.fj
+com.fj
+gov.fj
+info.fj
+mil.fj
+name.fj
+net.fj
+org.fj
+pro.fj
 
 // fk : https://en.wikipedia.org/wiki/.fk
 *.fk
@@ -6800,7 +6811,12 @@ yt
 مصر
 
 // xn--e1a4c ("eu", Cyrillic) : EU
+// https://eurid.eu
 ею
+
+// xn--qxa6a ("eu", Greek) : EU
+// https://eurid.eu
+ευ
 
 // xn--mgbah1a3hjkrd ("Mauritania", Arabic) : MR
 موريتانيا
@@ -7079,7 +7095,7 @@ org.zw
 
 // newGTLDs
 
-// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2019-12-11T17:19:54Z
+// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2020-02-25T18:19:40Z
 // This list is auto-generated, don't edit it manually.
 // aaa : 2015-02-26 American Automobile Association, Inc.
 aaa
@@ -7200,6 +7216,9 @@ alsace
 
 // alstom : 2015-07-30 ALSTOM
 alstom
+
+// amazon : 2019-12-19 Amazon EU S.à r.l.
+amazon
 
 // americanexpress : 2015-07-31 American Express Travel Related Services Company, Inc.
 americanexpress
@@ -7378,7 +7397,7 @@ bcn
 // beats : 2015-05-14 Beats Electronics, LLC
 beats
 
-// beauty : 2015-12-03 L'Oréal
+// beauty : 2015-12-03 XYZ.COM LLC
 beauty
 
 // beer : 2014-01-09 Minds + Machines Group Limited
@@ -7834,7 +7853,7 @@ cuisinella
 // cymru : 2014-05-08 Nominet UK
 cymru
 
-// cyou : 2015-01-22 Beijing Gamease Age Digital Technology Co., Ltd.
+// cyou : 2015-01-22 ShortDot SA
 cyou
 
 // dabur : 2014-02-06 Dabur India Limited
@@ -8401,7 +8420,7 @@ guitars
 // guru : 2013-08-27 Binky Moon, LLC
 guru
 
-// hair : 2015-12-03 L'Oréal
+// hair : 2015-12-03 XYZ.COM LLC
 hair
 
 // hamburg : 2014-02-20 Hamburg Top-Level-Domain GmbH
@@ -8800,9 +8819,6 @@ lexus
 // lgbt : 2014-05-08 Afilias Limited
 lgbt
 
-// liaison : 2014-10-02 Liaison Technologies, Incorporated
-liaison
-
 // lidl : 2014-09-18 Schwarz Domains und Services GmbH & Co. KG
 lidl
 
@@ -8923,7 +8939,7 @@ maif
 // maison : 2013-12-05 Binky Moon, LLC
 maison
 
-// makeup : 2015-01-15 L'Oréal
+// makeup : 2015-01-15 XYZ.COM LLC
 makeup
 
 // man : 2014-12-04 MAN SE
@@ -9066,9 +9082,6 @@ mov
 
 // movie : 2015-02-05 Binky Moon, LLC
 movie
-
-// movistar : 2014-10-16 Telefónica S.A.
-movistar
 
 // msd : 2015-07-23 MSD Registry Holdings, Inc.
 msd
@@ -9769,7 +9782,7 @@ site
 // ski : 2015-04-09 Afilias Limited
 ski
 
-// skin : 2015-01-15 L'Oréal
+// skin : 2015-01-15 XYZ.COM LLC
 skin
 
 // sky : 2014-06-19 Sky International AG
@@ -9964,9 +9977,6 @@ tech
 // technology : 2013-09-13 Binky Moon, LLC
 technology
 
-// telefonica : 2014-10-16 Telefónica S.A.
-telefonica
-
 // temasek : 2014-08-07 Temasek Holdings (Private) Limited
 temasek
 
@@ -10060,7 +10070,7 @@ trading
 // training : 2013-11-07 Binky Moon, LLC
 training
 
-// travel :  Dog Beach, LLC
+// travel : 2015-10-09 Dog Beach, LLC
 travel
 
 // travelchannel : 2015-07-02 Lifestyle Domain Holdings, Inc.
@@ -10408,6 +10418,9 @@ xin
 // xn--cck2b3b : 2015-02-26 Amazon Registry Services, Inc.
 ストア
 
+// xn--cckwcxetd : 2019-12-19 Amazon EU S.à r.l.
+アマゾン
+
 // xn--cg4bki : 2013-09-27 SAMSUNG SDS CO., LTD
 삼성
 
@@ -10477,6 +10490,9 @@ xin
 // xn--j1aef : 2015-01-15 VeriSign Sarl
 ком
 
+// xn--jlq480n2rg : 2019-12-19 Amazon EU S.à r.l.
+亚马逊
+
 // xn--jlq61u9w7b : 2015-01-08 Nokia Corporation
 诺基亚
 
@@ -10537,7 +10553,7 @@ xin
 // xn--nyqy26a : 2014-11-07 Stable Tone Limited
 健康
 
-// xn--otu796d : 2017-08-06 Internet DotTrademark Organisation Limited
+// xn--otu796d : 2017-08-06 Jiang Yu Liang Cai Technology Company Limited
 招聘
 
 // xn--p1acf : 2013-12-12 Rusnames Limited
@@ -10959,8 +10975,9 @@ certmgr.org
 xenapponazure.com
 
 // Civilized Discourse Construction Kit, Inc. : https://www.discourse.org/
-// Submitted by Rishabh Nambiar <rishabh.nambiar@discourse.org>
+// Submitted by Rishabh Nambiar & Michael Brown <team@discourse.org>
 discourse.group
+discourse.team
 
 // ClearVox : http://www.clearvox.nl/
 // Submitted by Leon Rowland <leon@clearvox.nl>
@@ -11690,6 +11707,7 @@ vologda.su
 // Fancy Bits, LLC : http://getchannels.com
 // Submitted by Aman Gupta <aman@getchannels.com>
 channelsdvr.net
+u.channelsdvr.net
 
 // Fastly Inc. : http://www.fastly.com/
 // Submitted by Fastly Security <security@fastly.com>
@@ -12609,6 +12627,10 @@ pubtls.org
 // Submitted by Xavier De Cock <xdecock@gmail.com>
 qualifioapp.com
 
+// QuickBackend: https://www.quickbackend.com
+// Submitted by Dani Biro <dani@pymet.com>
+qbuser.com
+
 // Redstar Consultants : https://www.redstarconsultants.com/
 // Submitted by Jons Slemmer <jons@redstarconsultants.com>
 instantcloud.cn
@@ -12722,6 +12744,10 @@ firewall-gateway.net
 my-firewall.org
 myfirewall.org
 spdns.org
+
+// Senseering GmbH : https://www.senseering.de
+// Submitted by Felix Mönckemeyer <f.moenckemeyer@senseering.de>
+senseering.net
 
 // Service Online LLC : http://drs.ua/
 // Submitted by Serhii Bulakh <support@drs.ua>
@@ -12993,6 +13019,14 @@ remotewd.com
 // Submitted by Yuvi Panda <yuvipanda@wikimedia.org>
 wmflabs.org
 
+// WoltLab GmbH : https://www.woltlab.com
+// Submitted by Tim Düsterhus <security@woltlab.cloud>
+myforum.community
+community-pro.de
+diskussionsbereich.de
+community-pro.net
+meinforum.net
+
 // XenonCloud GbR: https://xenoncloud.net
 // Submitted by Julian Uphoff <publicsuffixlist@xenoncloud.net>
 half.host
@@ -13060,5 +13094,4 @@ enterprisecloud.nu
 
 // ===END PRIVATE DOMAINS===
 )";
-
 }
