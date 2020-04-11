@@ -7,17 +7,16 @@ import pydomainextractor
 class DomainExtractorExtractionTestCase(
     unittest.TestCase,
 ):
-    @classmethod
-    def setUpClass(
-        cls,
+    def setUp(
+        self,
     ):
-        pydomainextractor.load()
+        self.domain_extractor = pydomainextractor.DomainExtractor()
 
     def test_extract_only_tld(
         self,
     ):
         self.assertEqual(
-            first=pydomainextractor.extract('com'),
+            first=self.domain_extractor.extract('com'),
             second={
                 'domain': '',
                 'subdomain': '',
@@ -26,7 +25,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('jp.net'),
+            first=self.domain_extractor.extract('jp.net'),
             second={
                 'domain': '',
                 'subdomain': '',
@@ -35,7 +34,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('鹿児島.jp'),
+            first=self.domain_extractor.extract('鹿児島.jp'),
             second={
                 'domain': '',
                 'subdomain': '',
@@ -44,7 +43,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('香格里拉'),
+            first=self.domain_extractor.extract('香格里拉'),
             second={
                 'domain': '',
                 'subdomain': '',
@@ -53,7 +52,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('xn--32vp30h.jp'),
+            first=self.domain_extractor.extract('xn--32vp30h.jp'),
             second={
                 'domain': '',
                 'subdomain': '',
@@ -65,7 +64,7 @@ class DomainExtractorExtractionTestCase(
         self,
     ):
         self.assertEqual(
-            first=pydomainextractor.extract('nonexistenttld'),
+            first=self.domain_extractor.extract('nonexistenttld'),
             second={
                 'domain': 'nonexistenttld',
                 'subdomain': '',
@@ -74,7 +73,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('香格里拉香格里拉香格里拉'),
+            first=self.domain_extractor.extract('香格里拉香格里拉香格里拉'),
             second={
                 'domain': '香格里拉香格里拉香格里拉',
                 'subdomain': '',
@@ -86,7 +85,7 @@ class DomainExtractorExtractionTestCase(
         self,
     ):
         self.assertEqual(
-            first=pydomainextractor.extract('nonexistenttld.nonexistenttld'),
+            first=self.domain_extractor.extract('nonexistenttld.nonexistenttld'),
             second={
                 'domain': 'nonexistenttld',
                 'subdomain': 'nonexistenttld',
@@ -95,7 +94,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('香格里拉香格里拉香格里拉.nonexistenttld'),
+            first=self.domain_extractor.extract('香格里拉香格里拉香格里拉.nonexistenttld'),
             second={
                 'domain': 'nonexistenttld',
                 'subdomain': '香格里拉香格里拉香格里拉',
@@ -107,7 +106,7 @@ class DomainExtractorExtractionTestCase(
         self,
     ):
         self.assertEqual(
-            first=pydomainextractor.extract('google.com'),
+            first=self.domain_extractor.extract('google.com'),
             second={
                 'domain': 'google',
                 'subdomain': '',
@@ -116,7 +115,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('subdomain.google.com'),
+            first=self.domain_extractor.extract('subdomain.google.com'),
             second={
                 'domain': 'google',
                 'subdomain': 'subdomain',
@@ -125,7 +124,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('subsubdomain.subdomain.google.com'),
+            first=self.domain_extractor.extract('subsubdomain.subdomain.google.com'),
             second={
                 'domain': 'google',
                 'subdomain': 'subsubdomain.subdomain',
@@ -134,7 +133,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('subsubdomain.subdomain.google.香格里拉'),
+            first=self.domain_extractor.extract('subsubdomain.subdomain.google.香格里拉'),
             second={
                 'domain': 'google',
                 'subdomain': 'subsubdomain.subdomain',
@@ -143,7 +142,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('subsubdomain.subdomain.google.鹿児島.jp'),
+            first=self.domain_extractor.extract('subsubdomain.subdomain.google.鹿児島.jp'),
             second={
                 'domain': 'google',
                 'subdomain': 'subsubdomain.subdomain',
@@ -152,7 +151,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('subsubdomain.subdomain.google.xn--32vp30h.jp'),
+            first=self.domain_extractor.extract('subsubdomain.subdomain.google.xn--32vp30h.jp'),
             second={
                 'domain': 'google',
                 'subdomain': 'subsubdomain.subdomain',
@@ -164,7 +163,7 @@ class DomainExtractorExtractionTestCase(
         self,
     ):
         self.assertEqual(
-            first=pydomainextractor.extract('bla.ck'),
+            first=self.domain_extractor.extract('bla.ck'),
             second={
                 'domain': '',
                 'subdomain': '',
@@ -173,7 +172,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('a.bla.ck'),
+            first=self.domain_extractor.extract('a.bla.ck'),
             second={
                 'domain': 'a',
                 'subdomain': '',
@@ -182,7 +181,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('a.b.bla.ck'),
+            first=self.domain_extractor.extract('a.b.bla.ck'),
             second={
                 'domain': 'b',
                 'subdomain': 'a',
@@ -191,7 +190,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('www.ck'),
+            first=self.domain_extractor.extract('www.ck'),
             second={
                 'domain': 'www',
                 'subdomain': '',
@@ -200,7 +199,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('a.www.ck'),
+            first=self.domain_extractor.extract('a.www.ck'),
             second={
                 'domain': 'www',
                 'subdomain': 'a',
@@ -209,7 +208,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('a.bzz.dapps.earth'),
+            first=self.domain_extractor.extract('a.bzz.dapps.earth'),
             second={
                 'domain': '',
                 'subdomain': '',
@@ -218,7 +217,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('a.b.bzz.dapps.earth'),
+            first=self.domain_extractor.extract('a.b.bzz.dapps.earth'),
             second={
                 'domain': 'a',
                 'subdomain': '',
@@ -230,7 +229,7 @@ class DomainExtractorExtractionTestCase(
         self,
     ):
         self.assertEqual(
-            first=pydomainextractor.extract('domain.Com'),
+            first=self.domain_extractor.extract('domain.Com'),
             second={
                 'domain': 'domain',
                 'subdomain': '',
@@ -239,7 +238,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('DOmain.Com'),
+            first=self.domain_extractor.extract('DOmain.Com'),
             second={
                 'domain': 'domain',
                 'subdomain': '',
@@ -248,7 +247,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('DOmain.COM'),
+            first=self.domain_extractor.extract('DOmain.COM'),
             second={
                 'domain': 'domain',
                 'subdomain': '',
@@ -257,7 +256,7 @@ class DomainExtractorExtractionTestCase(
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('a.b.bla.CK'),
+            first=self.domain_extractor.extract('a.b.bla.CK'),
             second={
                 'domain': 'b',
                 'subdomain': 'a',
@@ -269,26 +268,13 @@ class DomainExtractorExtractionTestCase(
 class DomainExtractorLoadTestCase(
     unittest.TestCase,
 ):
-    def setUp(
-        self,
-    ):
-        pydomainextractor.unload()
-
-    def test_no_load_called(
-        self,
-    ):
-        with self.assertRaises(
-            expected_exception=ValueError,
-        ):
-            pydomainextractor.extract('com')
-
     def test_load_called_without_data(
         self,
     ):
-        pydomainextractor.load()
+        domain_extractor = pydomainextractor.DomainExtractor()
 
         self.assertEqual(
-            first=pydomainextractor.extract('com'),
+            first=domain_extractor.extract('com'),
             second={
                 'subdomain': '',
                 'domain': '',
@@ -299,12 +285,12 @@ class DomainExtractorLoadTestCase(
     def test_load_called_with_data(
         self,
     ):
-        pydomainextractor.load(
+        domain_extractor = pydomainextractor.DomainExtractor(
             'com\n'
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('com'),
+            first=domain_extractor.extract('com'),
             second={
                 'subdomain': '',
                 'domain': '',
@@ -312,12 +298,12 @@ class DomainExtractorLoadTestCase(
             },
         )
 
-        pydomainextractor.load(
+        domain_extractor = pydomainextractor.DomainExtractor(
             'net\n'
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('com'),
+            first=domain_extractor.extract('com'),
             second={
                 'subdomain': '',
                 'domain': 'com',
@@ -325,12 +311,12 @@ class DomainExtractorLoadTestCase(
             },
         )
 
-        pydomainextractor.load(
+        domain_extractor = pydomainextractor.DomainExtractor(
             'customtld\n'
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('google.customtld'),
+            first=domain_extractor.extract('google.customtld'),
             second={
                 'subdomain': '',
                 'domain': 'google',
@@ -338,13 +324,13 @@ class DomainExtractorLoadTestCase(
             },
         )
 
-        pydomainextractor.load(
+        domain_extractor = pydomainextractor.DomainExtractor(
             'tld\n'
             'custom.tld\n'
         )
 
         self.assertEqual(
-            first=pydomainextractor.extract('google.custom.tld'),
+            first=domain_extractor.extract('google.custom.tld'),
             second={
                 'subdomain': '',
                 'domain': 'google',

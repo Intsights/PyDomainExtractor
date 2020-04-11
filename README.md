@@ -74,9 +74,9 @@ import pydomainextractor
 
 
 # Loads the current supplied version of PublicSuffixList from the repository. Does not download any data.
-pydomainextractor.load()
+domain_extractor = pydomainextractor.DomainExtractor()
 
-pydomainextractor.extract('google.com')
+domain_extractor.extract('google.com')
 >>> {
 >>>     'subdomain': '',
 >>>     'domain': 'google',
@@ -84,19 +84,19 @@ pydomainextractor.extract('google.com')
 >>> }
 
 # Loads a custom SuffixList data. Should follow PublicSuffixList's format.
-pydomainextractor.load(
+domain_extractor = pydomainextractor.DomainExtractor(
     'tld\n'
     'custom.tld\n'
 )
 
-pydomainextractor.extract('google.com')
+domain_extractor.extract('google.com')
 >>> {
 >>>     'subdomain': 'google',
 >>>     'domain': 'com',
 >>>     'suffix': ''
 >>> }
 
-pydomainextractor.extract('google.custom.tld')
+domain_extractor.extract('google.custom.tld')
 >>> {
 >>>     'subdomain': '',
 >>>     'domain': 'google',

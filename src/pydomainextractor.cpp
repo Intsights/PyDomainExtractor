@@ -1,4 +1,6 @@
+#define PY_SSIZE_T_CLEAN
 #include <Python.h>
+#include "structmember.h"
 #include <unordered_set>
 #include <string>
 #include <cstring>
@@ -152,12 +154,32 @@ class DomainExtractor {
 };
 
 
-std::unique_ptr<DomainExtractor> domain_extractor = nullptr;
-static PyObject * load(
-    PyObject * self,
-    PyObject * args,
-    PyObject * kwds
-) {
+typedef struct {
+    PyObject_HEAD
+    std::unique_ptr<DomainExtractor> domain_extractor;
+} DomainExtractorObject;
+
+
+static void
+DomainExtractor_dealloc(DomainExtractorObject *self)
+{
+    Py_TYPE(self)->tp_free((PyObject *) self);
+    self->domain_extractor.reset();
+}
+
+static PyObject *
+DomainExtractor_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    DomainExtractorObject *self;
+    self = (DomainExtractorObject *) type->tp_alloc(type, 0);
+
+    return (PyObject *) self;
+}
+
+
+static int
+DomainExtractor_init(DomainExtractorObject *self, PyObject *args, PyObject *kwds)
+{
     const char * suffix_list_data = "";
 
     static char * kwlist[] = {
@@ -166,45 +188,35 @@ static PyObject * load(
     };
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "|s", kwlist, &suffix_list_data)) {
-        return NULL;
+        return -1;
+    }
+
+
+    if (strlen(suffix_list_data) == 0) {
+        self->domain_extractor = std::make_unique<DomainExtractor>(PSL::public_suffix_list_data);
     } else {
-        if (strlen(suffix_list_data) == 0) {
-            domain_extractor = std::make_unique<DomainExtractor>(PSL::public_suffix_list_data);
-        } else {
-            domain_extractor = std::make_unique<DomainExtractor>(suffix_list_data);
-        }
-
-        Py_RETURN_NONE;
+        self->domain_extractor = std::make_unique<DomainExtractor>(suffix_list_data);
     }
+
+    return 0;
 }
 
 
-static PyObject * unload(
-    PyObject * self
-) {
-    if (domain_extractor != nullptr) {
-        domain_extractor.release();
-        domain_extractor = nullptr;
-    }
-
-    Py_RETURN_NONE;
-}
+static PyMemberDef DomainExtractor_members[] = {
+    {NULL}
+};
 
 
 PyObject * subdomain_key_py = PyUnicode_FromString("subdomain");
 PyObject * domain_key_py = PyUnicode_FromString("domain");
 PyObject * suffix_key_py = PyUnicode_FromString("suffix");
-static PyObject * extract(
-    PyObject * self,
+static PyObject *
+DomainExtractor_extract(
+    DomainExtractorObject * self,
     PyObject * const* args,
     Py_ssize_t nargs
-) {
-    if (domain_extractor == nullptr) {
-        PyErr_SetString(PyExc_ValueError, "Suffix list was not loaded. Call for load() first");
-
-        return NULL;
-    }
-
+)
+{
     if (nargs != 1) {
         PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
 
@@ -213,7 +225,7 @@ static PyObject * extract(
 
     const char * input = PyUnicode_AsUTF8(args[0]);
 
-    auto extracted_domain = domain_extractor->extract(input);
+    auto extracted_domain = self->domain_extractor->extract(input);
 
     PyObject * dict = PyDict_New();
 
@@ -257,31 +269,56 @@ static PyObject * extract(
 }
 
 
-static PyMethodDef pydomainextractor_methods[] = {
+static PyMethodDef DomainExtractor_methods[] = {
     {
         "extract",
-        (PyCFunction)extract,
+        (PyCFunction)DomainExtractor_extract,
         METH_FASTCALL,
         "Extract a domain string into its parts\n\nextract(domain)\nArguments:\n\tdomain(str): the domain string to extract\nReturn:\n\ttuple(str, str, str): subdomain, domain, suffix\n\n"
     },
-    {
-        "load",
-        (PyCFunction)load,
-        METH_VARARGS | METH_KEYWORDS,
-        "Loads a public suffix list data"
-    },
-    {
-        "unload",
-        (PyCFunction)unload,
-        METH_NOARGS,
-        "Release the public suffix list object"
-    },
-    {
-        NULL,
-        NULL,
-        0,
-        NULL
-    },
+    {NULL}  /* Sentinel */
+};
+
+
+static PyTypeObject DomainExtractorType = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "pydomainextractor.DomainExtractor", /* tp_name */
+    sizeof(DomainExtractorObject), /* tp_basicsize */
+    0, /* tp_itemsize */
+    (destructor)DomainExtractor_dealloc, /* tp_dealloc */
+    0, /* tp_print */
+    0, /* tp_getattr */
+    0, /* tp_setattr */
+    0, /* tp_reserved */
+    0, /* tp_repr */
+    0, /* tp_as_number */
+    0, /* tp_as_sequence */
+    0, /* tp_as_mapping */
+    0, /* tp_hash */
+    0, /* tp_call */
+    0, /* tp_str */
+    0, /* tp_getattro */
+    0, /* tp_setattro */
+    0, /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /* tp_flags */
+    "PyDomainExtractor is a highly optimized Domain Name Extraction library written in C++ ", /* tp_doc */
+    0, /* tp_traverse */
+    0, /* tp_clear */
+    0, /* tp_richcompare */
+    0, /* tp_weaklistoffset */
+    0, /* tp_iter */
+    0, /* tp_iternext */
+    DomainExtractor_methods, /* tp_methods */
+    DomainExtractor_members, /* tp_members */
+    0, /* tp_getset */
+    0, /* tp_base */
+    0, /* tp_dict */
+    0, /* tp_descr_get */
+    0, /* tp_descr_set */
+    0, /* tp_dictoffset */
+    (initproc)DomainExtractor_init, /* tp_init */
+    0, /* tp_alloc */
+    DomainExtractor_new /* tp_new */
 };
 
 
@@ -290,14 +327,29 @@ static struct PyModuleDef pydomainextractor_definition = {
     "pydomainextractor",
     "Extracting domain strings into their parts",
     -1,
-    pydomainextractor_methods,
+    NULL,
 };
 
 
-PyMODINIT_FUNC PyInit_pydomainextractor(void) {
-    Py_Initialize();
+PyMODINIT_FUNC
+PyInit_pydomainextractor(void) {
+    PyObject *m;
+    if (PyType_Ready(&DomainExtractorType) < 0) {
+        return NULL;
+    }
 
-    PyObject * m = PyModule_Create(&pydomainextractor_definition);
+    m = PyModule_Create(&pydomainextractor_definition);
+    if (m == NULL) {
+        return NULL;
+    }
+
+    Py_INCREF(&DomainExtractorType);
+    if (PyModule_AddObject(m, "DomainExtractor", (PyObject *) &DomainExtractorType) < 0) {
+        Py_DECREF(&DomainExtractorType);
+        Py_DECREF(m);
+
+        return NULL;
+    }
 
     return m;
 }
