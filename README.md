@@ -21,6 +21,8 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+  - [Extraction](#extraction)
+  - [Validation](#validation)
 - [License](#license)
 - [Contact](#contact)
 
@@ -68,7 +70,9 @@ pip3 install PyDomainExtractor
 
 ## Usage
 
-The usual use case:
+
+### Extraction
+
 ```python
 import pydomainextractor
 
@@ -102,6 +106,35 @@ domain_extractor.extract('google.custom.tld')
 >>>     'domain': 'google',
 >>>     'suffix': 'custom.tld'
 >>> }
+```
+
+
+### Validation
+
+```python
+import pydomainextractor
+
+
+# Loads the current supplied version of PublicSuffixList from the repository. Does not download any data.
+domain_extractor = pydomainextractor.DomainExtractor()
+
+domain_extractor.is_valid_domain('google.com')
+>>> True
+
+domain_extractor.is_valid_domain('domain.اتصالات')
+>>> True
+
+domain_extractor.is_valid_domain('xn--mgbaakc7dvf.xn--mgbaakc7dvf')
+>>> True
+
+domain_extractor.is_valid_domain('domain-.com')
+>>> False
+
+domain_extractor.is_valid_domain('-sub.domain.com')
+>>> False
+
+domain_extractor.is_valid_domain('\xF0\x9F\x98\x81nonalphanum.com')
+>>> False
 ```
 
 

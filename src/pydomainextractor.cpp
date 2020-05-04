@@ -5,6 +5,8 @@
 #include <string>
 #include <cstring>
 #include <sstream>
+#include <locale>
+#include <codecvt>
 #include <memory>
 #include <idn2.h>
 
@@ -18,6 +20,7 @@ class DomainExtractor {
         ) {
             std::istringstream suffix_list_data_stream(suffix_list_data);
             std::string line;
+            char * conversion_buffer = NULL;
 
             while (std::getline(suffix_list_data_stream, line)) {
                 if (line.find("//") != std::string::npos || line.empty()) {
@@ -35,11 +38,19 @@ class DomainExtractor {
                     line = line.substr(2);
                 }
 
-                char *conversion_buffer;
-                if (IDNA_SUCCESS == idn2_to_ascii_8z(line.c_str(), &conversion_buffer, IDN2_NONTRANSITIONAL)) {
+                if (IDN2_OK == idn2_to_ascii_8z(line.c_str(), &conversion_buffer, IDN2_NONTRANSITIONAL)) {
                     this->known_tlds.emplace(std::string(conversion_buffer));
                 }
-                free(conversion_buffer);
+                if (conversion_buffer != NULL) {
+                    idn2_free(conversion_buffer);
+                }
+
+                if (IDN2_OK == idn2_to_unicode_8z8z(line.c_str(), &conversion_buffer, IDN2_NONTRANSITIONAL)) {
+                    this->known_tlds.emplace(std::string(conversion_buffer));
+                }
+                if (conversion_buffer != NULL) {
+                    idn2_free(conversion_buffer);
+                }
 
                 this->known_tlds.emplace(line);
             }
@@ -56,7 +67,7 @@ class DomainExtractor {
         }
         ~DomainExtractor() {}
 
-        const inline std::tuple<std::string_view, std::string_view, std::string_view> extract(
+        inline std::tuple<std::string_view, std::string_view, std::string_view> extract(
             std::string_view domain
         ) noexcept {
             for (auto & domain_char : domain) {
@@ -91,7 +102,7 @@ class DomainExtractor {
             }
         }
 
-        const inline std::string_view extract_suffix(
+        inline std::string_view extract_suffix(
             std::string_view domain
         ) noexcept {
             std::string_view extracted_suffix;
@@ -143,6 +154,67 @@ class DomainExtractor {
             } else {
                 return extracted_suffix;
             }
+        }
+
+        inline bool is_valid_domain(
+            const std::string & domain
+        ) {
+            if (domain.size() > 255) {
+                return false;
+            }
+
+            std::string domain_part;
+            std::istringstream domain_parts_stream(domain);
+            while (std::getline(domain_parts_stream, domain_part, '.')) {
+                if (domain_part.size() > 63 || domain_part.empty()) {
+                    return false;
+                }
+
+                if (domain_part.front() == '-' || domain_part.back() == '-') {
+                    return false;
+                }
+
+                std::u16string domain_part_utf16 = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{}.from_bytes(domain_part.data());
+                for (const auto & ch : domain_part_utf16) {
+                    if (std::iswalnum(ch) == false && ch != '-') {
+                        return false;
+                    }
+                }
+            }
+
+            const auto & [subdomain, domain_name, suffix] = this->extract(domain);
+            if (suffix.empty() || domain_name.empty()) {
+                return false;
+            }
+
+            char * conversion_buffer = NULL;
+            int idn2_to_ascii_result = idn2_to_ascii_8z(
+                domain.c_str(),
+                &conversion_buffer,
+                IDN2_NONTRANSITIONAL | IDN2_NFC_INPUT
+            );
+            if (conversion_buffer != NULL) {
+                idn2_free(conversion_buffer);
+                conversion_buffer = NULL;
+            }
+            if (IDN2_OK != idn2_to_ascii_result) {
+                return false;
+            }
+
+            int idn2_to_unicode_result = idn2_to_unicode_8z8z(
+                domain.c_str(),
+                &conversion_buffer,
+                IDN2_NONTRANSITIONAL | IDN2_NFC_INPUT
+            );
+            if (conversion_buffer != NULL) {
+                idn2_free(conversion_buffer);
+                conversion_buffer = NULL;
+            }
+            if (IDN2_OK != idn2_to_unicode_result) {
+                return false;
+            }
+
+            return true;
         }
 
         std::unordered_set<std::string> known_tlds;
@@ -268,6 +340,29 @@ DomainExtractor_extract(
     return dict;
 }
 
+static PyObject *
+DomainExtractor_is_valid_domain(
+    DomainExtractorObject * self,
+    PyObject * const* args,
+    Py_ssize_t nargs
+)
+{
+    if (nargs != 1) {
+        PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
+
+        return NULL;
+    }
+
+    const char * input = PyUnicode_AsUTF8(args[0]);
+
+    auto valid_domain = self->domain_extractor->is_valid_domain(std::string(input));
+    if (valid_domain == true) {
+        Py_RETURN_TRUE;
+    } else {
+        Py_RETURN_FALSE;
+    }
+}
+
 
 static PyMethodDef DomainExtractor_methods[] = {
     {
@@ -275,6 +370,12 @@ static PyMethodDef DomainExtractor_methods[] = {
         (PyCFunction)DomainExtractor_extract,
         METH_FASTCALL,
         "Extract a domain string into its parts\n\nextract(domain)\nArguments:\n\tdomain(str): the domain string to extract\nReturn:\n\ttuple(str, str, str): subdomain, domain, suffix\n\n"
+    },
+    {
+        "is_valid_domain",
+        (PyCFunction)DomainExtractor_is_valid_domain,
+        METH_FASTCALL,
+        "Checks whether a domain is a valid domain\n\nis_valid_domain(domain)\nArguments:\n\tdomain(str): the domain string to validate\nReturn:\n\tbool: True if valid or False if invalid\n\n"
     },
     {NULL}  /* Sentinel */
 };

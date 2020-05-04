@@ -264,6 +264,82 @@ class DomainExtractorExtractionTestCase(
             },
         )
 
+    def test_is_valid_domain(
+        self,
+    ):
+        self.assertTrue(
+            expr=self.domain_extractor.is_valid_domain('domain.com'),
+        )
+        self.assertTrue(
+            expr=self.domain_extractor.is_valid_domain('sub.domain.com'),
+        )
+        self.assertTrue(
+            expr=self.domain_extractor.is_valid_domain('domain.COM'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('domain.invalid'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('com'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('com'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('-domain.com'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('domain-.com'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('-sub.domain.com'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('sub-.domain.com'),
+        )
+
+        self.assertTrue(
+            expr=self.domain_extractor.is_valid_domain('domain.xn--mgbaakc7dvf'),
+        )
+        self.assertTrue(
+            expr=self.domain_extractor.is_valid_domain('domain.اتصالات'),
+        )
+        self.assertTrue(
+            expr=self.domain_extractor.is_valid_domain('xn--mgbaakc7dvf.com'),
+        )
+        self.assertTrue(
+            expr=self.domain_extractor.is_valid_domain('اتصالات.com'),
+        )
+        self.assertTrue(
+            expr=self.domain_extractor.is_valid_domain('اتصالات.اتصالات'),
+        )
+        self.assertTrue(
+            expr=self.domain_extractor.is_valid_domain('xn--mgbaakc7dvf.xn--mgbaakc7dvf'),
+        )
+
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('domain.xn--mgbaakc7dvfa'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('domain.اsتصالات'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('xn--mgbaaskc7777dvf.com'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('اتصالsات.com'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('اتصالاsت.اتصالات'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('xn--mgbsaadddd1212121212kc7dvf.xn--mgbaakc7dvf'),
+        )
+
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('\xF0\x9F\x98\x81nonalphanum.com'),
+        )
+
 
 class DomainExtractorLoadTestCase(
     unittest.TestCase,

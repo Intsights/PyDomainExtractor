@@ -15,6 +15,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install Ubuntu packages
       run: >-
+        sudo apt update;
         sudo apt install libidn2-dev g++-9;
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9;
     - name: Test module
