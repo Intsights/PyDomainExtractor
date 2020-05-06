@@ -225,6 +225,15 @@ class DomainExtractorExtractionTestCase(
             },
         )
 
+        self.assertEqual(
+            first=self.domain_extractor.extract('domain.co.za'),
+            second={
+                'domain': 'domain',
+                'subdomain': '',
+                'suffix': 'co.za',
+            },
+        )
+
     def test_upper_case(
         self,
     ):
@@ -275,6 +284,12 @@ class DomainExtractorExtractionTestCase(
         )
         self.assertTrue(
             expr=self.domain_extractor.is_valid_domain('domain.COM'),
+        )
+        self.assertTrue(
+            expr=self.domain_extractor.is_valid_domain('domain.co.il'),
+        )
+        self.assertTrue(
+            expr=self.domain_extractor.is_valid_domain('domain.co.za'),
         )
         self.assertFalse(
             expr=self.domain_extractor.is_valid_domain('domain.invalid'),

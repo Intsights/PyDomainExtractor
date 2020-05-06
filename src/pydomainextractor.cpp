@@ -1,6 +1,6 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
-#include "structmember.h"
+#include <structmember.h>
 #include <unordered_set>
 #include <string>
 #include <cstring>
@@ -20,39 +20,29 @@ class DomainExtractor {
         ) {
             std::istringstream suffix_list_data_stream(suffix_list_data);
             std::string line;
-            char * conversion_buffer = NULL;
 
             while (std::getline(suffix_list_data_stream, line)) {
                 if (line.find("//") != std::string::npos || line.empty()) {
                     continue;
+                } else if (line.find("!") != std::string::npos) {
+                    std::string clean_tld = line.substr(1);
+                    auto permutations = this->get_all_permutations(clean_tld, false);
+                    for (const auto & permutation : permutations) {
+                        this->blacklisted_tlds.emplace(permutation);
+                    }
+                } else if (line.find("*") != std::string::npos) {
+                    std::string clean_tld = line.substr(2);
+                    auto permutations = this->get_all_permutations(clean_tld, false);
+                    for (const auto & permutation : permutations) {
+                        this->wildcard_tlds.emplace(permutation);
+                        this->known_tlds.emplace(permutation);
+                    }
+                } else {
+                    auto permutations = this->get_all_permutations(line, true);
+                    for (const auto & permutation : permutations) {
+                        this->known_tlds.emplace(permutation);
+                    }
                 }
-
-                if (line.find("!") != std::string::npos) {
-                    this->blacklisted_tlds.emplace(std::string(line.substr(1)));
-
-                    continue;
-                }
-
-                if (line.find("*") != std::string::npos) {
-                    this->wildcard_tlds.emplace(std::string(line.substr(2)));
-                    line = line.substr(2);
-                }
-
-                if (IDN2_OK == idn2_to_ascii_8z(line.c_str(), &conversion_buffer, IDN2_NONTRANSITIONAL)) {
-                    this->known_tlds.emplace(std::string(conversion_buffer));
-                }
-                if (conversion_buffer != NULL) {
-                    idn2_free(conversion_buffer);
-                }
-
-                if (IDN2_OK == idn2_to_unicode_8z8z(line.c_str(), &conversion_buffer, IDN2_NONTRANSITIONAL)) {
-                    this->known_tlds.emplace(std::string(conversion_buffer));
-                }
-                if (conversion_buffer != NULL) {
-                    idn2_free(conversion_buffer);
-                }
-
-                this->known_tlds.emplace(line);
             }
 
             for (auto const & known_tld : this->known_tlds) {
@@ -66,6 +56,47 @@ class DomainExtractor {
             }
         }
         ~DomainExtractor() {}
+
+
+        std::unordered_set<std::string> get_all_permutations(
+            const std::string & tld,
+            bool permutate_sub_tlds
+        ) {
+            std::unordered_set<std::string> translations;
+            std::unordered_set<std::string> permutations;
+            char * conversion_buffer = NULL;
+
+            translations.emplace(tld);
+
+            if (IDN2_OK == idn2_to_ascii_8z(tld.c_str(), &conversion_buffer, IDN2_NONTRANSITIONAL)) {
+                translations.emplace(std::string(conversion_buffer));
+            }
+            if (conversion_buffer != NULL) {
+                idn2_free(conversion_buffer);
+            }
+
+            if (IDN2_OK == idn2_to_unicode_8z8z(tld.c_str(), &conversion_buffer, IDN2_NONTRANSITIONAL)) {
+                translations.emplace(std::string(conversion_buffer));
+            }
+            if (conversion_buffer != NULL) {
+                idn2_free(conversion_buffer);
+            }
+
+            for (const auto & translation : translations) {
+                permutations.emplace(translation);
+
+                if (permutate_sub_tlds) {
+                    auto current_position = 0;
+                    while (translation.find('.', current_position) != std::string::npos) {
+                        std::string current_sliced_translation = translation.substr(translation.find('.', current_position) + 1);
+                        permutations.emplace(current_sliced_translation);
+                        current_position = translation.find('.', current_position) + 1;
+                    }
+                }
+            }
+
+            return permutations;
+        }
 
         inline std::tuple<std::string_view, std::string_view, std::string_view> extract(
             std::string_view domain
