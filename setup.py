@@ -5,7 +5,7 @@ import glob
 
 setuptools.setup(
     name='PyDomainExtractor',
-    version='0.5.0',
+    version='0.6.0',
     author='Gal Ben David',
     author_email='gal@intsights.com',
     url='https://github.com/Intsights/PyDomainExtractor',
