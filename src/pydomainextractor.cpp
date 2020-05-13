@@ -100,7 +100,16 @@ class DomainExtractor {
 
         inline std::tuple<std::string_view, std::string_view, std::string_view> extract(
             std::string_view domain
-        ) noexcept {
+        ) {
+            if (
+                domain.empty() ||
+                domain.front() == '.' ||
+                domain.back() == '.' ||
+                domain.find("..") != std::string::npos
+            ) {
+                throw std::runtime_error("Invalid domain detected");
+            }
+
             for (auto & domain_char : domain) {
                 if (domain_char >= 'A' && domain_char <= 'Z') {
                     const_cast<char&>(domain_char) = domain_char + 32;
@@ -328,47 +337,53 @@ DomainExtractor_extract(
 
     const char * input = PyUnicode_AsUTF8(args[0]);
 
-    auto extracted_domain = self->domain_extractor->extract(input);
+    try {
+        auto extracted_domain = self->domain_extractor->extract(input);
 
-    PyObject * dict = PyDict_New();
+        PyObject * dict = PyDict_New();
 
-    PyObject * subdomain_py = PyUnicode_DecodeUTF8(
-        std::get<0>(extracted_domain).data(),
-        std::get<0>(extracted_domain).size(),
-        NULL
-    );
-    PyObject * domain_py = PyUnicode_DecodeUTF8(
-        std::get<1>(extracted_domain).data(),
-        std::get<1>(extracted_domain).size(),
-        NULL
-    );
-    PyObject * suffix_py = PyUnicode_DecodeUTF8(
-        std::get<2>(extracted_domain).data(),
-        std::get<2>(extracted_domain).size(),
-        NULL
-    );
+        PyObject * subdomain_py = PyUnicode_DecodeUTF8(
+            std::get<0>(extracted_domain).data(),
+            std::get<0>(extracted_domain).size(),
+            NULL
+        );
+        PyObject * domain_py = PyUnicode_DecodeUTF8(
+            std::get<1>(extracted_domain).data(),
+            std::get<1>(extracted_domain).size(),
+            NULL
+        );
+        PyObject * suffix_py = PyUnicode_DecodeUTF8(
+            std::get<2>(extracted_domain).data(),
+            std::get<2>(extracted_domain).size(),
+            NULL
+        );
 
-    PyDict_SetItem(
-        dict,
-        PyUnicode_FromObject(subdomain_key_py),
-        subdomain_py
-    );
-    PyDict_SetItem(
-        dict,
-        PyUnicode_FromObject(domain_key_py),
-        domain_py
-    );
-    PyDict_SetItem(
-        dict,
-        PyUnicode_FromObject(suffix_key_py),
-        suffix_py
-    );
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(subdomain_key_py),
+            subdomain_py
+        );
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(domain_key_py),
+            domain_py
+        );
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(suffix_key_py),
+            suffix_py
+        );
 
-    Py_DECREF(subdomain_py);
-    Py_DECREF(domain_py);
-    Py_DECREF(suffix_py);
+        Py_DECREF(subdomain_py);
+        Py_DECREF(domain_py);
+        Py_DECREF(suffix_py);
 
-    return dict;
+        return dict;
+    } catch (const std::runtime_error &exception) {
+        PyErr_SetString(PyExc_ValueError, exception.what());
+
+        return NULL;
+    }
 }
 
 static PyObject *

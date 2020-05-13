@@ -273,6 +273,34 @@ class DomainExtractorExtractionTestCase(
             },
         )
 
+    def test_syntactic_invalid_domains(
+        self,
+    ):
+        with self.assertRaises(
+            expected_exception=ValueError,
+        ):
+            self.domain_extractor.extract('.com')
+
+        with self.assertRaises(
+            expected_exception=ValueError,
+        ):
+            self.domain_extractor.extract('domain..com')
+
+        with self.assertRaises(
+            expected_exception=ValueError,
+        ):
+            self.domain_extractor.extract('sub..domain.com')
+
+        with self.assertRaises(
+            expected_exception=ValueError,
+        ):
+            self.domain_extractor.extract('domain.com.')
+
+        with self.assertRaises(
+            expected_exception=ValueError,
+        ):
+            self.domain_extractor.extract('com.')
+
     def test_is_valid_domain(
         self,
     ):
