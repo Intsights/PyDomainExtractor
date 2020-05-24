@@ -222,8 +222,12 @@ class DomainExtractor {
                 }
             }
 
-            const auto & [subdomain, domain_name, suffix] = this->extract(domain);
-            if (suffix.empty() || domain_name.empty()) {
+            try {
+                const auto & [subdomain, domain_name, suffix] = this->extract(domain);
+                if (suffix.empty() || domain_name.empty()) {
+                    return false;
+                }
+            } catch (...) {
                 return false;
             }
 

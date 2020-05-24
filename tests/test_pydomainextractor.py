@@ -383,6 +383,22 @@ class DomainExtractorExtractionTestCase(
             expr=self.domain_extractor.is_valid_domain('\xF0\x9F\x98\x81nonalphanum.com'),
         )
 
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('.com'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('domain..com'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('sub..domain.com'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('domain.com.'),
+        )
+        self.assertFalse(
+            expr=self.domain_extractor.is_valid_domain('com.'),
+        )
+
 
 class DomainExtractorLoadTestCase(
     unittest.TestCase,
