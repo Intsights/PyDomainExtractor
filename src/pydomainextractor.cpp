@@ -9,6 +9,7 @@
 #include <codecvt>
 #include <memory>
 #include <idn2.h>
+#include <Poco/URI.h>
 
 #include "public_suffix_list.h"
 
@@ -140,6 +141,18 @@ class DomainExtractor {
                     extracted_suffix
                 );
             }
+        }
+
+        inline std::tuple<std::string_view, std::string_view, std::string_view> extract_from_url(
+            const std::string &url
+        ) {
+            Poco::URI poco_uri(url);
+
+            return std::make_tuple(
+                poco_uri.getHost(),
+                "",
+                ""
+            );
         }
 
         inline std::string_view extract_suffix(
@@ -391,6 +404,70 @@ DomainExtractor_extract(
 }
 
 static PyObject *
+DomainExtractor_extract_from_url(
+    DomainExtractorObject * self,
+    PyObject * const* args,
+    Py_ssize_t nargs
+)
+{
+    if (nargs != 1) {
+        PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
+
+        return NULL;
+    }
+
+    const char * input = PyUnicode_AsUTF8(args[0]);
+
+    try {
+        auto extracted_domain = self->domain_extractor->extract_from_url(input);
+
+        PyObject * dict = PyDict_New();
+
+        PyObject * subdomain_py = PyUnicode_DecodeUTF8(
+            std::get<0>(extracted_domain).data(),
+            std::get<0>(extracted_domain).size(),
+            NULL
+        );
+        PyObject * domain_py = PyUnicode_DecodeUTF8(
+            std::get<1>(extracted_domain).data(),
+            std::get<1>(extracted_domain).size(),
+            NULL
+        );
+        PyObject * suffix_py = PyUnicode_DecodeUTF8(
+            std::get<2>(extracted_domain).data(),
+            std::get<2>(extracted_domain).size(),
+            NULL
+        );
+
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(subdomain_key_py),
+            subdomain_py
+        );
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(domain_key_py),
+            domain_py
+        );
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(suffix_key_py),
+            suffix_py
+        );
+
+        Py_DECREF(subdomain_py);
+        Py_DECREF(domain_py);
+        Py_DECREF(suffix_py);
+
+        return dict;
+    } catch (const std::runtime_error &exception) {
+        PyErr_SetString(PyExc_ValueError, exception.what());
+
+        return NULL;
+    }
+}
+
+static PyObject *
 DomainExtractor_is_valid_domain(
     DomainExtractorObject * self,
     PyObject * const* args,
@@ -420,6 +497,12 @@ static PyMethodDef DomainExtractor_methods[] = {
         (PyCFunction)DomainExtractor_extract,
         METH_FASTCALL,
         "Extract a domain string into its parts\n\nextract(domain)\nArguments:\n\tdomain(str): the domain string to extract\nReturn:\n\ttuple(str, str, str): subdomain, domain, suffix\n\n"
+    },
+    {
+        "extract_from_url",
+        (PyCFunction)DomainExtractor_extract_from_url,
+        METH_FASTCALL,
+        "Checks whether a domain is a valid domain\n\nextract_from_url(domain)\nArguments:\n\tdomain(str): the domain string to validate\nReturn:\n\tbool: True if valid or False if invalid\n\n"
     },
     {
         "is_valid_domain",

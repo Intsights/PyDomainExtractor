@@ -44,6 +44,7 @@ setuptools.setup(
             ],
             extra_link_args=[
                 '-lidn2',
+                '-lPocoFoundation',
             ],
             include_dirs=[
                 'src',

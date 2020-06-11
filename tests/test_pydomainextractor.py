@@ -159,6 +159,21 @@ class DomainExtractorExtractionTestCase(
             },
         )
 
+    def test_extract_from_url(
+        self,
+    ):
+        print(self.domain_extractor.extract_from_url('http://google.com/'))
+        print(self.domain_extractor.extract_from_url('http://user:pass@google.com/'))
+        print(self.domain_extractor.extract_from_url('http://user:pass@google.com:80/'))
+        # self.assertEqual(
+        #     first=self.domain_extractor.extract_from_url('http://google.com/'),
+        #     second={
+        #         'domain': 'google',
+        #         'subdomain': '',
+        #         'suffix': 'com',
+        #     },
+        # )
+
     def test_special_cases(
         self,
     ):
