@@ -145,19 +145,6 @@ class DomainExtractor {
             }
         }
 
-        inline std::string_view extract_from_url(
-            const std::string &url
-        ) {
-            try {
-                std::cout << url;
-                web::uri cpprest_uri(url);
-                return cpprest_uri.host();
-            }
-            catch (const web::uri_exception &exception){
-                throw std::runtime_error("Invalid url detected");
-            }
-        }
-
         inline std::string_view extract_suffix(
             std::string_view domain
         ) noexcept {
@@ -292,271 +279,306 @@ typedef struct {
 } DomainExtractorObject;
 
 
-// static void
-// DomainExtractor_dealloc(DomainExtractorObject *self)
-// {
-//     Py_TYPE(self)->tp_free((PyObject *) self);
-//     self->domain_extractor.reset();
-// }
+static void
+DomainExtractor_dealloc(DomainExtractorObject *self)
+{
+    Py_TYPE(self)->tp_free((PyObject *) self);
+    self->domain_extractor.reset();
+}
 
-// static PyObject *
-// DomainExtractor_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
-// {
-//     DomainExtractorObject *self;
-//     self = (DomainExtractorObject *) type->tp_alloc(type, 0);
+static PyObject *
+DomainExtractor_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    DomainExtractorObject *self;
+    self = (DomainExtractorObject *) type->tp_alloc(type, 0);
 
-//     return (PyObject *) self;
-// }
-
-
-// static int
-// DomainExtractor_init(DomainExtractorObject *self, PyObject *args, PyObject *kwds)
-// {
-//     const char * suffix_list_data = "";
-
-//     static char * kwlist[] = {
-//         (char *)"suffix_list_data",
-//         NULL
-//     };
-
-//     if (!PyArg_ParseTupleAndKeywords(args, kwds, "|s", kwlist, &suffix_list_data)) {
-//         return -1;
-//     }
+    return (PyObject *) self;
+}
 
 
-//     if (strlen(suffix_list_data) == 0) {
-//         self->domain_extractor = std::make_unique<DomainExtractor>(PSL::public_suffix_list_data);
-//     } else {
-//         self->domain_extractor = std::make_unique<DomainExtractor>(suffix_list_data);
-//     }
+static int
+DomainExtractor_init(DomainExtractorObject *self, PyObject *args, PyObject *kwds)
+{
+    const char * suffix_list_data = "";
 
-//     return 0;
-// }
+    static char * kwlist[] = {
+        (char *)"suffix_list_data",
+        NULL
+    };
 
-
-// static PyMemberDef DomainExtractor_members[] = {
-//     {NULL}
-// };
-
-
-// PyObject * subdomain_key_py = PyUnicode_FromString("subdomain");
-// PyObject * domain_key_py = PyUnicode_FromString("domain");
-// PyObject * suffix_key_py = PyUnicode_FromString("suffix");
-// static PyObject *
-// DomainExtractor_extract(
-//     DomainExtractorObject * self,
-//     PyObject * const* args,
-//     Py_ssize_t nargs
-// )
-// {
-//     if (nargs != 1) {
-//         PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
-
-//         return NULL;
-//     }
-
-//     const char * input = PyUnicode_AsUTF8(args[0]);
-
-//     try {
-//         auto extracted_domain = self->domain_extractor->extract(input);
-
-//         PyObject * dict = PyDict_New();
-
-//         PyObject * subdomain_py = PyUnicode_DecodeUTF8(
-//             std::get<0>(extracted_domain).data(),
-//             std::get<0>(extracted_domain).size(),
-//             NULL
-//         );
-//         PyObject * domain_py = PyUnicode_DecodeUTF8(
-//             std::get<1>(extracted_domain).data(),
-//             std::get<1>(extracted_domain).size(),
-//             NULL
-//         );
-//         PyObject * suffix_py = PyUnicode_DecodeUTF8(
-//             std::get<2>(extracted_domain).data(),
-//             std::get<2>(extracted_domain).size(),
-//             NULL
-//         );
-
-//         PyDict_SetItem(
-//             dict,
-//             PyUnicode_FromObject(subdomain_key_py),
-//             subdomain_py
-//         );
-//         PyDict_SetItem(
-//             dict,
-//             PyUnicode_FromObject(domain_key_py),
-//             domain_py
-//         );
-//         PyDict_SetItem(
-//             dict,
-//             PyUnicode_FromObject(suffix_key_py),
-//             suffix_py
-//         );
-
-//         Py_DECREF(subdomain_py);
-//         Py_DECREF(domain_py);
-//         Py_DECREF(suffix_py);
-
-//         return dict;
-//     } catch (const std::runtime_error &exception) {
-//         PyErr_SetString(PyExc_ValueError, exception.what());
-
-//         return NULL;
-//     }
-// }
-
-// static PyObject *
-// DomainExtractor_extract_from_url(
-//     DomainExtractorObject * self,
-//     PyObject * const* args,
-//     Py_ssize_t nargs
-// )
-// {
-//     if (nargs != 1) {
-//         PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
-
-//         return NULL;
-//     }
-
-//     const char * input = PyUnicode_AsUTF8(args[0]);
-
-//     try {
-//         auto extracted_domain = self->domain_extractor->extract_suffix(input);
-
-//         return PyUnicode_DecodeUTF8(
-//             extracted_domain.data(),
-//             extracted_domain.size(),
-//             NULL
-//         );
-
-//     } catch (const std::runtime_error &exception) {
-//         PyErr_SetString(PyExc_ValueError, exception.what());
-
-//         return NULL;
-//     }
-// }
-
-// static PyObject *
-// DomainExtractor_is_valid_domain(
-//     DomainExtractorObject * self,
-//     PyObject * const* args,
-//     Py_ssize_t nargs
-// )
-// {
-//     if (nargs != 1) {
-//         PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
-
-//         return NULL;
-//     }
-
-//     const char * input = PyUnicode_AsUTF8(args[0]);
-
-//     auto valid_domain = self->domain_extractor->is_valid_domain(std::string(input));
-//     if (valid_domain == true) {
-//         Py_RETURN_TRUE;
-//     } else {
-//         Py_RETURN_FALSE;
-//     }
-// }
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|s", kwlist, &suffix_list_data)) {
+        return -1;
+    }
 
 
-// static PyMethodDef DomainExtractor_methods[] = {
-//     {
-//         "extract",
-//         (PyCFunction)DomainExtractor_extract,
-//         METH_FASTCALL,
-//         "Extract a domain string into its parts\n\nextract(domain)\nArguments:\n\tdomain(str): the domain string to extract\nReturn:\n\ttuple(str, str, str): subdomain, domain, suffix\n\n"
-//     },
-//     {
-//         "extract_from_url",
-//         (PyCFunction)DomainExtractor_extract_from_url,
-//         METH_FASTCALL,
-//         "Checks whether a domain is a valid domain\n\nextract_from_url(domain)\nArguments:\n\tdomain(str): the domain string to validate\nReturn:\n\tbool: True if valid or False if invalid\n\n"
-//     },
-//     {
-//         "is_valid_domain",
-//         (PyCFunction)DomainExtractor_is_valid_domain,
-//         METH_FASTCALL,
-//         "Checks whether a domain is a valid domain\n\nis_valid_domain(domain)\nArguments:\n\tdomain(str): the domain string to validate\nReturn:\n\tbool: True if valid or False if invalid\n\n"
-//     },
-//     {NULL}  /* Sentinel */
-// };
+    if (strlen(suffix_list_data) == 0) {
+        self->domain_extractor = std::make_unique<DomainExtractor>(PSL::public_suffix_list_data);
+    } else {
+        self->domain_extractor = std::make_unique<DomainExtractor>(suffix_list_data);
+    }
+
+    return 0;
+}
 
 
-// static PyTypeObject DomainExtractorType = {
-//     PyVarObject_HEAD_INIT(NULL, 0)
-//     "pydomainextractor.DomainExtractor", /* tp_name */
-//     sizeof(DomainExtractorObject), /* tp_basicsize */
-//     0, /* tp_itemsize */
-//     (destructor)DomainExtractor_dealloc, /* tp_dealloc */
-//     0, /* tp_print */
-//     0, /* tp_getattr */
-//     0, /* tp_setattr */
-//     0, /* tp_reserved */
-//     0, /* tp_repr */
-//     0, /* tp_as_number */
-//     0, /* tp_as_sequence */
-//     0, /* tp_as_mapping */
-//     0, /* tp_hash */
-//     0, /* tp_call */
-//     0, /* tp_str */
-//     0, /* tp_getattro */
-//     0, /* tp_setattro */
-//     0, /* tp_as_buffer */
-//     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /* tp_flags */
-//     "PyDomainExtractor is a highly optimized Domain Name Extraction library written in C++ ", /* tp_doc */
-//     0, /* tp_traverse */
-//     0, /* tp_clear */
-//     0, /* tp_richcompare */
-//     0, /* tp_weaklistoffset */
-//     0, /* tp_iter */
-//     0, /* tp_iternext */
-//     DomainExtractor_methods, /* tp_methods */
-//     DomainExtractor_members, /* tp_members */
-//     0, /* tp_getset */
-//     0, /* tp_base */
-//     0, /* tp_dict */
-//     0, /* tp_descr_get */
-//     0, /* tp_descr_set */
-//     0, /* tp_dictoffset */
-//     (initproc)DomainExtractor_init, /* tp_init */
-//     0, /* tp_alloc */
-//     DomainExtractor_new /* tp_new */
-// };
+static PyMemberDef DomainExtractor_members[] = {
+    {NULL}
+};
 
 
-// static struct PyModuleDef pydomainextractor_definition = {
-//     PyModuleDef_HEAD_INIT,
-//     "pydomainextractor",
-//     "Extracting domain strings into their parts",
-//     -1,
-//     NULL,
-// };
+PyObject * subdomain_key_py = PyUnicode_FromString("subdomain");
+PyObject * domain_key_py = PyUnicode_FromString("domain");
+PyObject * suffix_key_py = PyUnicode_FromString("suffix");
+static PyObject *
+DomainExtractor_extract(
+    DomainExtractorObject * self,
+    PyObject * const* args,
+    Py_ssize_t nargs
+)
+{
+    if (nargs != 1) {
+        PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
+
+        return NULL;
+    }
+
+    const char * input = PyUnicode_AsUTF8(args[0]);
+
+    try {
+        auto extracted_domain = self->domain_extractor->extract(input);
+
+        PyObject * dict = PyDict_New();
+
+        PyObject * subdomain_py = PyUnicode_DecodeUTF8(
+            std::get<0>(extracted_domain).data(),
+            std::get<0>(extracted_domain).size(),
+            NULL
+        );
+        PyObject * domain_py = PyUnicode_DecodeUTF8(
+            std::get<1>(extracted_domain).data(),
+            std::get<1>(extracted_domain).size(),
+            NULL
+        );
+        PyObject * suffix_py = PyUnicode_DecodeUTF8(
+            std::get<2>(extracted_domain).data(),
+            std::get<2>(extracted_domain).size(),
+            NULL
+        );
+
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(subdomain_key_py),
+            subdomain_py
+        );
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(domain_key_py),
+            domain_py
+        );
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(suffix_key_py),
+            suffix_py
+        );
+
+        Py_DECREF(subdomain_py);
+        Py_DECREF(domain_py);
+        Py_DECREF(suffix_py);
+
+        return dict;
+    } catch (const std::runtime_error &exception) {
+        PyErr_SetString(PyExc_ValueError, exception.what());
+
+        return NULL;
+    }
+}
+
+static PyObject *
+DomainExtractor_extract_from_url(
+    DomainExtractorObject * self,
+    PyObject * const* args,
+    Py_ssize_t nargs
+)
+{
+    if (nargs != 1) {
+        PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
+
+        return NULL;
+    }
+
+    const char * input = PyUnicode_AsUTF8(args[0]);
+
+    try {
+        web::uri cpprest_uri(input);
+        std::string host = cpprest_uri.host();
+        auto extracted_domain = self->domain_extractor->extract(host);
+
+        PyObject * dict = PyDict_New();
+
+        PyObject * subdomain_py = PyUnicode_DecodeUTF8(
+            std::get<0>(extracted_domain).data(),
+            std::get<0>(extracted_domain).size(),
+            NULL
+        );
+        PyObject * domain_py = PyUnicode_DecodeUTF8(
+            std::get<1>(extracted_domain).data(),
+            std::get<1>(extracted_domain).size(),
+            NULL
+        );
+        PyObject * suffix_py = PyUnicode_DecodeUTF8(
+            std::get<2>(extracted_domain).data(),
+            std::get<2>(extracted_domain).size(),
+            NULL
+        );
+
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(subdomain_key_py),
+            subdomain_py
+        );
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(domain_key_py),
+            domain_py
+        );
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(suffix_key_py),
+            suffix_py
+        );
+
+        Py_DECREF(subdomain_py);
+        Py_DECREF(domain_py);
+        Py_DECREF(suffix_py);
+
+        return dict;
+    } catch (const std::runtime_error &exception) {
+        PyErr_SetString(PyExc_ValueError, exception.what());
+
+        return NULL;
+    }
+}
+
+static PyObject *
+DomainExtractor_is_valid_domain(
+    DomainExtractorObject * self,
+    PyObject * const* args,
+    Py_ssize_t nargs
+)
+{
+    if (nargs != 1) {
+        PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
+
+        return NULL;
+    }
+
+    const char * input = PyUnicode_AsUTF8(args[0]);
+
+    auto valid_domain = self->domain_extractor->is_valid_domain(std::string(input));
+    if (valid_domain == true) {
+        Py_RETURN_TRUE;
+    } else {
+        Py_RETURN_FALSE;
+    }
+}
 
 
-// PyMODINIT_FUNC
-// PyInit_pydomainextractor(void) {
-//     PyObject *m;
-//     if (PyType_Ready(&DomainExtractorType) < 0) {
-//         return NULL;
-//     }
+static PyMethodDef DomainExtractor_methods[] = {
+    {
+        "extract",
+        (PyCFunction)DomainExtractor_extract,
+        METH_FASTCALL,
+        "Extract a domain string into its parts\n\nextract(domain)\nArguments:\n\tdomain(str): the domain string to extract\nReturn:\n\ttuple(str, str, str): subdomain, domain, suffix\n\n"
+    },
+    {
+        "extract_from_url",
+        (PyCFunction)DomainExtractor_extract_from_url,
+        METH_FASTCALL,
+        "Checks whether a domain is a valid domain\n\nextract_from_url(domain)\nArguments:\n\tdomain(str): the domain string to validate\nReturn:\n\tbool: True if valid or False if invalid\n\n"
+    },
+    {
+        "is_valid_domain",
+        (PyCFunction)DomainExtractor_is_valid_domain,
+        METH_FASTCALL,
+        "Checks whether a domain is a valid domain\n\nis_valid_domain(domain)\nArguments:\n\tdomain(str): the domain string to validate\nReturn:\n\tbool: True if valid or False if invalid\n\n"
+    },
+    {NULL}  /* Sentinel */
+};
 
-//     m = PyModule_Create(&pydomainextractor_definition);
-//     if (m == NULL) {
-//         return NULL;
-//     }
 
-//     Py_INCREF(&DomainExtractorType);
-//     if (PyModule_AddObject(m, "DomainExtractor", (PyObject *) &DomainExtractorType) < 0) {
-//         Py_DECREF(&DomainExtractorType);
-//         Py_DECREF(m);
+static PyTypeObject DomainExtractorType = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    "pydomainextractor.DomainExtractor", /* tp_name */
+    sizeof(DomainExtractorObject), /* tp_basicsize */
+    0, /* tp_itemsize */
+    (destructor)DomainExtractor_dealloc, /* tp_dealloc */
+    0, /* tp_print */
+    0, /* tp_getattr */
+    0, /* tp_setattr */
+    0, /* tp_reserved */
+    0, /* tp_repr */
+    0, /* tp_as_number */
+    0, /* tp_as_sequence */
+    0, /* tp_as_mapping */
+    0, /* tp_hash */
+    0, /* tp_call */
+    0, /* tp_str */
+    0, /* tp_getattro */
+    0, /* tp_setattro */
+    0, /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /* tp_flags */
+    "PyDomainExtractor is a highly optimized Domain Name Extraction library written in C++ ", /* tp_doc */
+    0, /* tp_traverse */
+    0, /* tp_clear */
+    0, /* tp_richcompare */
+    0, /* tp_weaklistoffset */
+    0, /* tp_iter */
+    0, /* tp_iternext */
+    DomainExtractor_methods, /* tp_methods */
+    DomainExtractor_members, /* tp_members */
+    0, /* tp_getset */
+    0, /* tp_base */
+    0, /* tp_dict */
+    0, /* tp_descr_get */
+    0, /* tp_descr_set */
+    0, /* tp_dictoffset */
+    (initproc)DomainExtractor_init, /* tp_init */
+    0, /* tp_alloc */
+    DomainExtractor_new /* tp_new */
+};
 
-//         return NULL;
-//     }
 
-//     return m;
-// }
+static struct PyModuleDef pydomainextractor_definition = {
+    PyModuleDef_HEAD_INIT,
+    "pydomainextractor",
+    "Extracting domain strings into their parts",
+    -1,
+    NULL,
+};
+
+
+PyMODINIT_FUNC
+PyInit_pydomainextractor(void) {
+    PyObject *m;
+    if (PyType_Ready(&DomainExtractorType) < 0) {
+        return NULL;
+    }
+
+    m = PyModule_Create(&pydomainextractor_definition);
+    if (m == NULL) {
+        return NULL;
+    }
+
+    Py_INCREF(&DomainExtractorType);
+    if (PyModule_AddObject(m, "DomainExtractor", (PyObject *) &DomainExtractorType) < 0) {
+        Py_DECREF(&DomainExtractorType);
+        Py_DECREF(m);
+
+        return NULL;
+    }
+
+    return m;
+}
 
 int main(){
     return 0;
