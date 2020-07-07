@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import unittest
-import responses
 import tldextract
 import pydomainextractor
 
@@ -16,8 +15,7 @@ def assert_extract(  # pylint: disable=missing-docstring
     extractor=extract,
 ):
     expected_fqdn, expected_subdomain, expected_domain, expected_tld = expected_domain_data
-    extracted_url = extractor.extract_from_url(url)
-    result = extractor.extract(extracted_url)
+    result = extractor.extract_from_url(url)
     assert expected_subdomain == result['subdomain']
     assert expected_domain == result['domain']
     assert expected_tld == result['suffix']
@@ -275,18 +273,18 @@ class DomainExtractorTldExtractTestCase(
         assert result == expected_dict
 
 
-    @responses.activate  # pylint: disable=no-member
-    def test_cache_timeouts(
-        self,
-    ):
-        server = 'http://some-server.com'
-        responses.add(  # pylint: disable=no-member
-            responses.GET,  # pylint: disable=no-member
-            server,
-            status=408
-        )
+    # @responses.activate  # pylint: disable=no-member
+    # def test_cache_timeouts(
+    #     self,
+    # ):
+    #     server = 'http://some-server.com'
+    #     responses.add(  # pylint: disable=no-member
+    #         responses.GET,  # pylint: disable=no-member
+    #         server,
+    #         status=408
+    #     )
 
-        assert tldextract.remote.find_first_response([server], 5) == ''
+    #     assert tldextract.remote.find_first_response([server], 5) == ''
 
 
     def test_extract_url(

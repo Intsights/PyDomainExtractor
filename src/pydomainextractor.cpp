@@ -145,19 +145,6 @@ class DomainExtractor {
             }
         }
 
-        inline std::string_view extract_from_url(
-            const std::string &url
-        ) {
-            try {
-                std::cout << url;
-                web::uri cpprest_uri(url);
-                return cpprest_uri.host();
-            }
-            catch (const web::uri_exception &exception){
-                throw std::runtime_error("Invalid url detected");
-            }
-        }
-
         inline std::string_view extract_suffix(
             std::string_view domain
         ) noexcept {
@@ -421,14 +408,58 @@ DomainExtractor_extract_from_url(
 
     const char * input = PyUnicode_AsUTF8(args[0]);
 
-    try {
-        auto extracted_domain = self->domain_extractor->extract_from_url(input);
+    web::uri cpprest_uri;
 
-        return PyUnicode_DecodeUTF8(
-            extracted_domain.data(),
-            extracted_domain.size(),
+    try {
+        cpprest_uri = web::uri(input);
+    } catch (const web::uri_exception &exception){
+        PyErr_SetString(PyExc_ValueError, "invalid url detected");
+
+        return NULL;
+    }
+
+    try {
+        auto extracted_domain = self->domain_extractor->extract(cpprest_uri.host());
+
+        PyObject * dict = PyDict_New();
+
+        PyObject * subdomain_py = PyUnicode_DecodeUTF8(
+            std::get<0>(extracted_domain).data(),
+            std::get<0>(extracted_domain).size(),
             NULL
         );
+        PyObject * domain_py = PyUnicode_DecodeUTF8(
+            std::get<1>(extracted_domain).data(),
+            std::get<1>(extracted_domain).size(),
+            NULL
+        );
+        PyObject * suffix_py = PyUnicode_DecodeUTF8(
+            std::get<2>(extracted_domain).data(),
+            std::get<2>(extracted_domain).size(),
+            NULL
+        );
+
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(subdomain_key_py),
+            subdomain_py
+        );
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(domain_key_py),
+            domain_py
+        );
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(suffix_key_py),
+            suffix_py
+        );
+
+        Py_DECREF(subdomain_py);
+        Py_DECREF(domain_py);
+        Py_DECREF(suffix_py);
+
+        return dict;
 
     } catch (const std::runtime_error &exception) {
         PyErr_SetString(PyExc_ValueError, exception.what());
