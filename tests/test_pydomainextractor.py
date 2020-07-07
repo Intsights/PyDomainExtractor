@@ -159,26 +159,6 @@ class DomainExtractorExtractionTestCase(
             },
         )
 
-    def test_extract_from_url(
-        self,
-    ):
-        self.assertEqual(
-            first=self.domain_extractor.extract_from_url('http://google.com/'),
-            second='google.com'
-        )
-        self.assertEqual(
-            first=self.domain_extractor.extract_from_url('http://user:pass@google.com/'),
-            second='google.com'
-        )
-        self.assertEqual(
-            first=self.domain_extractor.extract_from_url('http://user:pass@google.com:80/'),
-            second='google.com'
-        )
-        self.assertEqual(
-            first=self.domain_extractor.extract_from_url('http://mail.google.com/mail'),
-            second='mail.google.com'
-        )
-
     def test_special_cases(
         self,
     ):
@@ -492,3 +472,601 @@ class DomainExtractorLoadTestCase(
                 'suffix': 'custom.tld',
             },
         )
+
+
+class DomainExtractorTldExtractTestCase(
+    unittest.TestCase,
+):
+    domain_extractor = pydomainextractor.DomainExtractor()
+
+    def test_american(
+        self,
+    ):
+        url = 'http://www.google.com'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': 'www',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+
+    def test_british(
+        self,
+    ):
+        url = 'http://www.theregister.co.uk'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': 'www',
+                'domain': 'theregister',
+                'suffix': 'co.uk',
+            },
+        )
+
+    def test_no_subdomain(
+        self,
+    ):
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://gmail.com',
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'gmail',
+                'suffix': 'com',
+            },
+        )
+
+    def test_nested_subdomain(
+        self,
+    ):
+        url = 'http://media.forums.theregister.co.uk'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': 'media.forums',
+                'domain': 'theregister',
+                'suffix': 'co.uk',
+            },
+        )
+
+    def test_odd_but_possible(
+        self,
+    ):
+        url = 'http://www.www.com'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': 'www',
+                'domain': 'www',
+                'suffix': 'com',
+            },
+        )
+        url = 'http://www.com'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'www',
+                'suffix': 'com',
+            },
+        )
+
+    def test_suffix(
+        self,
+    ):
+        with self.assertRaises(
+            ValueError,
+        ):
+            self.domain_extractor.extract_from_url(
+                'com',
+            )
+
+        with self.assertRaises(
+            ValueError,
+        ):
+            self.domain_extractor.extract_from_url(
+                'co.uk',
+            )
+
+    def test_local_host(
+        self,
+    ):
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://internalunlikelyhostname/',
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'internalunlikelyhostname',
+                'suffix': '',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://internalunlikelyhostname.bizarre',
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'internalunlikelyhostname',
+                'suffix': 'bizarre',
+            },
+        )
+
+    def test_qualified_local_host(
+        self,
+    ):
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://internalunlikelyhostname.info/'
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'internalunlikelyhostname',
+                'suffix': 'info',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://internalunlikelyhostname.information/',
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'internalunlikelyhostname',
+                'suffix': 'information',
+            },
+        )
+
+    def test_ip(
+        self,
+    ):
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://216.22.0.192/',
+            ),
+            second={
+                'subdomain': '',
+                'domain': '216.22.0.192',
+                'suffix': '',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://216.22.project.coop/',
+            ),
+            second={
+                'subdomain': '216.22',
+                'domain': 'project',
+                'suffix': 'coop',
+            },
+        )
+
+    def test_looks_like_ip(
+        self,
+    ):
+        with self.assertRaises(ValueError):
+            url = u'1\xe9'
+            self.domain_extractor.extract_from_url(
+                url,
+            )
+
+    def test_punycode(
+        self,
+    ):
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://xn--h1alffa9f.xn--p1ai',
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'xn--h1alffa9f',
+                'suffix': 'xn--p1ai',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://xN--h1alffa9f.xn--p1ai',
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'xn--h1alffa9f',
+                'suffix': 'xn--p1ai',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://XN--h1alffa9f.xn--p1ai',
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'xn--h1alffa9f',
+                'suffix': 'xn--p1ai',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'xn--tub-1m9d15sfkkhsifsbqygyujjrw602gk4li5qqk98aca0w.google.com',
+            ),
+            second={
+                'subdomain': 'xn--tub-1m9d15sfkkhsifsbqygyujjrw602gk4li5qqk98aca0w',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'xn--tub-1m9d15sfkkhsifsbqygyujjrw60.google.com',
+            ),
+            second={
+                'subdomain': 'xn--tub-1m9d15sfkkhsifsbqygyujjrw60',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+
+    def test_invalid_puny_with_puny(
+        self,
+    ):
+        url = 'http://xn--zckzap6140b352by.blog.so-net.xn--wcvs22d.hk'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': 'xn--zckzap6140b352by.blog',
+                'domain': 'so-net',
+                'suffix': 'xn--wcvs22d.hk',
+            },
+        )
+
+    def test_puny_with_non_puny(
+        self,
+    ):
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                u'http://xn--zckzap6140b352by.blog.so-net.教育.hk',
+            ),
+            second={
+                'subdomain': 'xn--zckzap6140b352by.blog',
+                'domain': 'so-net',
+                'suffix': u'教育.hk',
+            },
+        )
+
+    def test_idna_2008(
+        self,
+    ):
+        with self.assertRaises(
+            ValueError,
+        ):
+            url = 'xn--gieen46ers-73a.de'
+            self.assertEqual(
+                first=self.domain_extractor.extract_from_url(
+                    url,
+                ),
+                second={
+                    'subdomain': '',
+                    'domain': 'xn--gieen46ers-73a',
+                    'suffix': 'de',
+                },
+            )
+
+    def test_empty(
+        self,
+    ):
+        url = 'http://'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': '',
+                'domain': '',
+                'suffix': '',
+            },
+        )
+
+    def test_scheme(
+        self,
+    ):
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'https://mail.google.com/mail',
+            ),
+            second={
+                'subdomain': 'mail',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'ssh://mail.google.com/mail',
+            ),
+            second={
+                'subdomain': 'mail',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                '//mail.google.com/mail',
+            ),
+            second={
+                'subdomain': 'mail',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'mail.google.com/mail',
+            ),
+            second={
+                'subdomain': 'mail',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+
+    def test_port(
+        self,
+    ):
+        url = 'git+ssh://www.github.com:8443/'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': 'www',
+                'domain': 'github',
+                'suffix': 'com',
+            },
+        )
+
+    def test_username(
+        self,
+    ):
+        url = 'ftp://johndoe:5cr1p7k1dd13@1337.warez.com:2501'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': '1337',
+                'domain': 'warez',
+                'suffix': 'com',
+            },
+        )
+
+    def test_query_fragment(
+        self,
+    ):
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://google.com?q=cats',
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://google.com#Welcome',
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://google.com/#Welcome',
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://google.com/s#Welcome',
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://google.com/s?q=cats#Welcome',
+            ),
+            second={
+                'subdomain': '',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+
+    def test_regex_order(
+        self,
+    ):
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://www.parliament.uk',
+            ),
+            second={
+                'subdomain': 'www',
+                'domain': 'parliament',
+                'suffix': 'uk',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                'http://www.parliament.co.uk',
+            ),
+            second={
+                'subdomain': 'www',
+                'domain': 'parliament',
+                'suffix': 'co.uk',
+            },
+        )
+
+    def test_unhandled_by_iana(
+        self,
+    ):
+        url = 'http://www.cgs.act.edu.au/'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': 'www',
+                'domain': 'cgs',
+                'suffix': 'act.edu.au',
+            },
+        )
+        url = 'http://www.google.com.au/'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': 'www',
+                'domain': 'google',
+                'suffix': 'com.au',
+            },
+        )
+
+    def test_tld_is_a_website_too(
+        self,
+    ):
+        url = 'http://www.metp.net.cn'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': 'www',
+                'domain': 'metp',
+                'suffix': 'net.cn',
+            },
+        )
+
+    def test_dns_root_label(
+        self,
+    ):
+        url = 'http://www.example.com./'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': 'www',
+                'domain': 'example',
+                'suffix': 'coom',
+            },
+        )
+
+    def test_private_domains(
+        self,
+    ):
+        url = 'http://waiterrant.blogspot.com'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': 'waiterrant',
+                'domain': 'blogspot',
+                'suffix': 'com',
+            },
+        )
+
+    def test_ipv4(
+        self,
+    ):
+        url = 'http://127.0.0.1/foo/bar'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': '',
+                'domain': '127.0.0.1',
+                'suffix': '',
+            },
+        )
+
+    def test_ipv4_bad(
+        self,
+    ):
+        url = 'http://256.256.256.256/foo/bar'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': '256.256.256',
+                'domain': '256',
+                'suffix': '',
+            },
+        )
+
+    def test_ipv4_lookalike(
+        self,
+    ):
+        url = 'http://127.0.0.1.9/foo/bar'
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url(
+                url,
+            ),
+            second={
+                'subdomain': '127.0.0.1',
+                'domain': '9',
+                'suffix': '',
+            },
+        )
+
+    def test_result_as_dict(
+        self,
+    ):
+        result = self.domain_extractor.extract(
+            'http://admin:password1@www.google.com:666/secret/admin/interface?param1=42'
+        )
+        expected_dict = {
+            'subdomain': 'www',
+            'domain': 'google',
+            'suffix': 'com',
+        }
+        assert result == expected_dict
+
+    def test_extract_url(
+        self,
+    ):
+        result = self.domain_extractor.extract_from_url(
+            'http://admin:password1@www.google.com:666/secret/admin/interface?param1=42'
+        )
+        assert result == {
+            'subdomain': 'www',
+            'domain': 'google',
+            'suffix': 'com',
+        }
