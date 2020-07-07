@@ -209,7 +209,6 @@ class DomainExtractorTldExtractTestCase(
     def test_unhandled_by_iana(
         self,
     ):
-        import ipdb; ipdb.set_trace()
         assert_extract('http://www.cgs.act.edu.au/',
                     ('www.cgs.act.edu.au', 'www', 'cgs', 'act.edu.au'))
         assert_extract('http://www.google.com.au/',
