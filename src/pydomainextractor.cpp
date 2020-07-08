@@ -1,6 +1,6 @@
 #define PY_SSIZE_T_CLEAN
-#include <python3.7m/Python.h>
-#include <python3.7m/structmember.h>
+#include <Python.h>
+#include <structmember.h>
 #include <unordered_set>
 #include <string>
 #include <cstring>
