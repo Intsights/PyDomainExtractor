@@ -599,9 +599,9 @@ class DomainExtractorTldExtractTestCase(
                 'http://internalunlikelyhostname.bizarre',
             ),
             second={
-                'subdomain': '',
-                'domain': 'internalunlikelyhostname',
-                'suffix': 'bizarre',
+                'subdomain': 'internalunlikelyhostname',
+                'domain': 'bizarre',
+                'suffix': '',
             },
         )
 
@@ -623,9 +623,9 @@ class DomainExtractorTldExtractTestCase(
                 'http://internalunlikelyhostname.information/',
             ),
             second={
-                'subdomain': '',
-                'domain': 'internalunlikelyhostname',
-                'suffix': 'information',
+                'subdomain': 'internalunlikelyhostname',
+                'domain': 'information',
+                'suffix': '',
             },
         )
 
@@ -637,8 +637,8 @@ class DomainExtractorTldExtractTestCase(
                 'http://216.22.0.192/',
             ),
             second={
-                'subdomain': '',
-                'domain': '216.22.0.192',
+                'subdomain': '216.22.0',
+                'domain': '192',
                 'suffix': '',
             },
         )
@@ -695,26 +695,19 @@ class DomainExtractorTldExtractTestCase(
                 'suffix': 'xn--p1ai',
             },
         )
-        self.assertEqual(
-            first=self.domain_extractor.extract_from_url(
+        with self.assertRaises(
+            ValueError,
+        ):
+            self.domain_extractor.extract_from_url(
                 'xn--tub-1m9d15sfkkhsifsbqygyujjrw602gk4li5qqk98aca0w.google.com',
-            ),
-            second={
-                'subdomain': 'xn--tub-1m9d15sfkkhsifsbqygyujjrw602gk4li5qqk98aca0w',
-                'domain': 'google',
-                'suffix': 'com',
-            },
-        )
-        self.assertEqual(
-            first=self.domain_extractor.extract_from_url(
+            )
+
+        with self.assertRaises(
+            ValueError,
+        ):
+            self.domain_extractor.extract_from_url(
                 'xn--tub-1m9d15sfkkhsifsbqygyujjrw60.google.com',
-            ),
-            second={
-                'subdomain': 'xn--tub-1m9d15sfkkhsifsbqygyujjrw60',
-                'domain': 'google',
-                'suffix': 'com',
-            },
-        )
+            )
 
     def test_invalid_puny_with_puny(
         self,
@@ -731,19 +724,15 @@ class DomainExtractorTldExtractTestCase(
             },
         )
 
-    def test_puny_with_non_puny(
+    def test_puny_with_non_puny_raises_value_error(
         self,
     ):
-        self.assertEqual(
-            first=self.domain_extractor.extract_from_url(
+        with self.assertRaises(
+            ValueError,
+        ):
+            self.domain_extractor.extract_from_url(
                 u'http://xn--zckzap6140b352by.blog.so-net.教育.hk',
-            ),
-            second={
-                'subdomain': 'xn--zckzap6140b352by.blog',
-                'domain': 'so-net',
-                'suffix': u'教育.hk',
-            },
-        )
+            )
 
     def test_idna_2008(
         self,
@@ -763,20 +752,16 @@ class DomainExtractorTldExtractTestCase(
                 },
             )
 
-    def test_empty(
+    def test_empty_raises_value_error(
         self,
     ):
         url = 'http://'
-        self.assertEqual(
-            first=self.domain_extractor.extract_from_url(
+        with self.assertRaises(
+            ValueError,
+        ):
+            self.domain_extractor.extract_from_url(
                 url,
-            ),
-            second={
-                'subdomain': '',
-                'domain': '',
-                'suffix': '',
-            },
-        )
+            )
 
     def test_scheme(
         self,
@@ -811,16 +796,16 @@ class DomainExtractorTldExtractTestCase(
                 'suffix': 'com',
             },
         )
-        self.assertEqual(
-            first=self.domain_extractor.extract_from_url(
+    
+    def test_no_protocol_raises_value_error(
+        self,
+    ):
+        with self.assertRaises(
+            ValueError,
+        ):
+            self.domain_extractor.extract_from_url(
                 'mail.google.com/mail',
-            ),
-            second={
-                'subdomain': 'mail',
-                'domain': 'google',
-                'suffix': 'com',
-            },
-        )
+            )
 
     def test_port(
         self,
@@ -971,22 +956,18 @@ class DomainExtractorTldExtractTestCase(
             },
         )
 
-    def test_dns_root_label(
+    def test_dns_root_label_raises_value_error(
         self,
     ):
         url = 'http://www.example.com./'
-        self.assertEqual(
-            first=self.domain_extractor.extract_from_url(
+        with self.assertRaises(
+            ValueError,
+        ):
+            self.domain_extractor.extract_from_url(
                 url,
-            ),
-            second={
-                'subdomain': 'www',
-                'domain': 'example',
-                'suffix': 'coom',
-            },
-        )
+            )
 
-    def test_private_domains(
+    def test_psl_private_domains(
         self,
     ):
         url = 'http://waiterrant.blogspot.com'
@@ -995,9 +976,9 @@ class DomainExtractorTldExtractTestCase(
                 url,
             ),
             second={
-                'subdomain': 'waiterrant',
-                'domain': 'blogspot',
-                'suffix': 'com',
+                'subdomain': '',
+                'domain': 'waiterrant',
+                'suffix': 'blogspot.com',
             },
         )
 
@@ -1010,8 +991,8 @@ class DomainExtractorTldExtractTestCase(
                 url,
             ),
             second={
-                'subdomain': '',
-                'domain': '127.0.0.1',
+                'subdomain': '127.0.0',
+                'domain': '1',
                 'suffix': '',
             },
         )
