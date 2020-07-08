@@ -588,7 +588,3 @@ PyInit_pydomainextractor(void) {
 
     return m;
 }
-
-int main(){
-    return 0;
-}
