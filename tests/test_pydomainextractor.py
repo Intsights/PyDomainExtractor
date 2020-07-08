@@ -1046,19 +1046,6 @@ class DomainExtractorTldExtractTestCase(
             },
         )
 
-    def test_result_as_dict(
-        self,
-    ):
-        result = self.domain_extractor.extract(
-            'http://admin:password1@www.google.com:666/secret/admin/interface?param1=42'
-        )
-        expected_dict = {
-            'subdomain': 'www',
-            'domain': 'google',
-            'suffix': 'com',
-        }
-        assert result == expected_dict
-
     def test_extract_url(
         self,
     ):
