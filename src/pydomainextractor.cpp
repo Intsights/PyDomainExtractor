@@ -10,7 +10,6 @@
 #include <codecvt>
 #include <memory>
 #include <idn2.h>
-#include <cpprest/base_uri.h>
 #include <tsl/robin_set.h>
 
 #include "public_suffix_list.h"
@@ -406,19 +405,33 @@ DomainExtractor_extract_from_url(
     }
 
     const char * input = PyUnicode_AsUTF8(args[0]);
+    std::string_view url(input);
 
-    web::uri cpprest_uri;
-
-    try {
-        cpprest_uri = web::uri(input);
-    } catch (const web::uri_exception &exception){
-        PyErr_SetString(PyExc_ValueError, exception.what());
+    std::size_t scheme_separator_position = url.find("://");
+    if (scheme_separator_position == std::string::npos) {
+        PyErr_SetString(PyExc_ValueError, "url is invalid: no scheme");
 
         return NULL;
     }
+    url = url.substr(scheme_separator_position + 3);
+
+    std::size_t path_separator = url.find("/");
+    if (path_separator != std::string::npos) {
+        url = url.substr(0, path_separator);
+    }
+
+    std::size_t authentication_separator = url.find("@");
+    if (authentication_separator != std::string::npos) {
+        url = url.substr(authentication_separator + 1);
+    }
+
+    std::size_t port_separator = url.find(":");
+    if (port_separator != std::string::npos) {
+        url = url.substr(0, port_separator);
+    }
 
     try {
-        auto extracted_domain = self->domain_extractor->extract(cpprest_uri.host());
+        auto extracted_domain = self->domain_extractor->extract(url);
 
         PyObject * dict = PyDict_New();
 

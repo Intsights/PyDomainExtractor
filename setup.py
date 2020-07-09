@@ -45,7 +45,6 @@ setuptools.setup(
             ],
             extra_link_args=[
                 '-lidn2',
-                '-lcpprest',
             ],
             include_dirs=[
                 'src',

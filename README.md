@@ -40,7 +40,6 @@ PyDomainExtractor is a library intended for parsing domain names into their part
 * [GNU libidn2](https://www.gnu.org/software/libidn/#libidn2)
 * [Tessil/robin-map](https://github.com/Tessil/robin-map)
 * [Public Suffix List](https://publicsuffix.org/)
-* [cpprestsdk](https://github.com/microsoft/cpprestsdk)
 
 
 ### Performance
@@ -64,7 +63,7 @@ Test was measured on a file containing 1 million random urls
 
 | Library  | Function | Time |
 | ------------- | ------------- | ------------- |
-| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 0.69s |
+| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 0.28s |
 | [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_sld | 1.91s |
 | [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 5.55s |
 | [tld](https://github.com/barseghyanartur/tld) | publicsuffix2.get_tld | 5.98s |
@@ -75,11 +74,11 @@ Test was measured on a file containing 1 million random urls
 In order to compile this package you should have GCC, libidn2, and Python development package installed.
 * Fedora
 ```sh
-sudo dnf install python3-devel libidn2-devel gcc-c++ cpprest-devel
+sudo dnf install python3-devel libidn2-devel gcc-c++
 ```
 * Ubuntu 18.04
 ```sh
-sudo apt install python3-dev libidn2-dev g++-9 libcpprest-dev
+sudo apt install python3-dev libidn2-dev g++-9
 ```
 
 
