@@ -412,7 +412,7 @@ DomainExtractor_extract_from_url(
     try {
         cpprest_uri = web::uri(input);
     } catch (const web::uri_exception &exception){
-        PyErr_SetString(PyExc_ValueError, "invalid url detected");
+        PyErr_SetString(PyExc_ValueError, exception.what());
 
         return NULL;
     }

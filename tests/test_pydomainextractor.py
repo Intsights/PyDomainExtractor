@@ -796,7 +796,7 @@ class DomainExtractorTldExtractTestCase(
                 'suffix': 'com',
             },
         )
-    
+
     def test_no_protocol_raises_value_error(
         self,
     ):

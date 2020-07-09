@@ -18,6 +18,8 @@
 - [About The Project](#about-the-project)
   - [Built With](#built-with)
   - [Performance](#performance)
+    - [Extract From Domain](#extract-from-domain)
+    - [Extract From URL](#extract-from-url)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
@@ -43,13 +45,29 @@ PyDomainExtractor is a library intended for parsing domain names into their part
 
 ### Performance
 
+
+#### Extract From Domain
+
 Test was measured on a file containing 10 million random domains from various TLDs
 
-| Library  | Function | Time | Improvement Factor |
-| ------------- | ------------- | ------------- | ------------- |
-| [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 67.0s | 1.0x |
-| [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_tld | 25.8s | 2.6x |
-| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 2.67s | 25.1x |
+| Library  | Function | Time |
+| ------------- | ------------- | ------------- |
+| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 2.21s |
+| [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_sld | 16.53s |
+| [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 42.45s |
+| [tld](https://github.com/barseghyanartur/tld) | publicsuffix2.get_tld | 47.07s |
+
+
+#### Extract From URL
+
+Test was measured on a file containing 1 million random urls
+
+| Library  | Function | Time |
+| ------------- | ------------- | ------------- |
+| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 0.69s |
+| [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_sld | 1.91s |
+| [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 5.55s |
+| [tld](https://github.com/barseghyanartur/tld) | publicsuffix2.get_tld | 5.98s |
 
 
 ### Prerequisites
@@ -70,7 +88,6 @@ sudo apt install python3-dev libidn2-dev g++-9 libcpprest-dev
 ```sh
 pip3 install PyDomainExtractor
 ```
-
 
 
 ## Usage
