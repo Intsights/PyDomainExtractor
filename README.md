@@ -22,6 +22,7 @@
   - [Installation](#installation)
 - [Usage](#usage)
   - [Extraction](#extraction)
+  - [URL Extraction](#url-extraction)
   - [Validation](#validation)
 - [License](#license)
 - [Contact](#contact)
@@ -37,6 +38,7 @@ PyDomainExtractor is a library intended for parsing domain names into their part
 * [GNU libidn2](https://www.gnu.org/software/libidn/#libidn2)
 * [Tessil/robin-map](https://github.com/Tessil/robin-map)
 * [Public Suffix List](https://publicsuffix.org/)
+* [cpprestsdk](https://github.com/microsoft/cpprestsdk)
 
 
 ### Performance
@@ -49,17 +51,19 @@ Test was measured on a file containing 10 million random domains from various TL
 | [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_tld | 25.8s | 2.6x |
 | [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 2.67s | 25.1x |
 
+
 ### Prerequisites
 
 In order to compile this package you should have GCC, libidn2, and Python development package installed.
 * Fedora
 ```sh
-sudo dnf install python3-devel libidn2-devel gcc-c++
+sudo dnf install python3-devel libidn2-devel gcc-c++ cpprest-devel
 ```
 * Ubuntu 18.04
 ```sh
-sudo apt install python3-dev libidn2-dev g++-9
+sudo apt install python3-dev libidn2-dev g++-9 libcpprest-dev
 ```
+
 
 ### Installation
 
@@ -110,6 +114,24 @@ domain_extractor.extract('google.custom.tld')
 ```
 
 
+### URL Extraction
+
+```python
+import pydomainextractor
+
+
+# Loads the current supplied version of PublicSuffixList from the repository. Does not download any data.
+domain_extractor = pydomainextractor.DomainExtractor()
+
+domain_extractor.extract('http://google.com/')
+>>> {
+>>>     'subdomain': '',
+>>>     'domain': 'google',
+>>>     'suffix': 'com'
+>>> }
+```
+
+
 ### Validation
 
 ```python
@@ -137,7 +159,6 @@ domain_extractor.is_valid_domain('-sub.domain.com')
 domain_extractor.is_valid_domain('\xF0\x9F\x98\x81nonalphanum.com')
 >>> False
 ```
-
 
 
 ## License

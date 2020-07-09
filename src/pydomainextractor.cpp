@@ -11,8 +11,6 @@
 #include <memory>
 #include <idn2.h>
 #include <cpprest/base_uri.h>
-#include <cpprest/uri.h>
-#include <cpprest/uri_builder.h>
 #include <tsl/robin_set.h>
 
 #include "public_suffix_list.h"
@@ -498,13 +496,13 @@ static PyMethodDef DomainExtractor_methods[] = {
         "extract",
         (PyCFunction)DomainExtractor_extract,
         METH_FASTCALL,
-        "Extract a domain string into its parts\n\nextract(domain)\nArguments:\n\tdomain(str): the domain string to extract\nReturn:\n\ttuple(str, str, str): subdomain, domain, suffix\n\n"
+        "Extract a domain string into its parts\n\nextract(domain)\nArguments:\n\tdomain(str): the domain string to extract\nReturn:\n\tdict[str, str] -> The extracted parts as 'subdomain', 'domain', 'suffix'\n\n"
     },
     {
         "extract_from_url",
         (PyCFunction)DomainExtractor_extract_from_url,
         METH_FASTCALL,
-        "Extract a url string into its parts\n\nextract_from_url(url)\nArguments:\n\turl(str): the url string to extract\nReturn:\n\ttuple(str, str, str): subdomain, domain, suffix\n\n"
+        "Extract a domain from a url into its parts\n\nextract_from_url(url)\nArguments:\n\turl(str): the url string to extract\nReturn:\n\tdict[str, str] -> The extracted parts as 'subdomain', 'domain', 'suffix'\n\n"
     },
     {
         "is_valid_domain",
