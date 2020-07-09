@@ -263,7 +263,7 @@ tas.gov.au
 vic.gov.au
 wa.gov.au
 // 4LDs
-education.tas.edu.au
+// education.tas.edu.au - Removed at the request of the Department of Education Tasmania
 schools.nsw.edu.au
 
 // aw : https://en.wikipedia.org/wiki/.aw
@@ -7096,7 +7096,7 @@ org.zw
 
 // newGTLDs
 
-// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2020-06-20T16:49:36Z
+// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2020-06-27T16:53:37Z
 // This list is auto-generated, don't edit it manually.
 // aaa : 2015-02-26 American Automobile Association, Inc.
 aaa
@@ -7178,9 +7178,6 @@ agency
 
 // aig : 2014-12-18 American International Group, Inc.
 aig
-
-// aigo : 2015-08-06 aigo Digital Technology Co,Ltd.
-aigo
 
 // airbus : 2015-07-30 Airbus S.A.S.
 airbus
@@ -7305,7 +7302,7 @@ audi
 // audible : 2015-06-25 Amazon Registry Services, Inc.
 audible
 
-// audio : 2014-03-20 Uniregistry, Corp.
+// audio : 2014-03-20 UNR Corp.
 audio
 
 // auspost : 2015-08-13 Australian Postal Corporation
@@ -7443,7 +7440,7 @@ bio
 // black : 2014-01-16 Afilias Limited
 black
 
-// blackfriday : 2014-01-16 Uniregistry, Corp.
+// blackfriday : 2014-01-16 UNR Corp.
 blackfriday
 
 // blockbuster : 2015-07-30 Dish DBS Corporation
@@ -7683,7 +7680,7 @@ cheap
 // chintai : 2015-06-11 CHINTAI Corporation
 chintai
 
-// christmas : 2013-11-21 Uniregistry, Corp.
+// christmas : 2013-11-21 UNR Corp.
 christmas
 
 // chrome : 2014-07-24 Charleston Road Registry Inc.
@@ -7722,7 +7719,7 @@ claims
 // cleaning : 2013-12-05 Binky Moon, LLC
 cleaning
 
-// click : 2014-06-05 Uniregistry, Corp.
+// click : 2014-06-05 UNR Corp.
 click
 
 // clinic : 2014-03-20 Binky Moon, LLC
@@ -7935,7 +7932,7 @@ dhl
 // diamonds : 2013-09-22 Binky Moon, LLC
 diamonds
 
-// diet : 2014-06-26 Uniregistry, Corp.
+// diet : 2014-06-26 UNR Corp.
 diet
 
 // digital : 2014-03-06 Binky Moon, LLC
@@ -8184,7 +8181,7 @@ flir
 // florist : 2013-11-07 Binky Moon, LLC
 florist
 
-// flowers : 2014-10-09 Uniregistry, Corp.
+// flowers : 2014-10-09 UNR Corp.
 flowers
 
 // fly : 2014-05-08 Charleston Road Registry Inc.
@@ -8274,7 +8271,7 @@ gallo
 // gallup : 2015-02-19 Gallup, Inc.
 gallup
 
-// game : 2015-05-28 Uniregistry, Corp.
+// game : 2015-05-28 UNR Corp.
 game
 
 // games : 2015-05-28 Dog Beach, LLC
@@ -8412,7 +8409,7 @@ guge
 // guide : 2013-09-13 Binky Moon, LLC
 guide
 
-// guitars : 2013-11-14 Uniregistry, Corp.
+// guitars : 2013-11-14 UNR Corp.
 guitars
 
 // guru : 2013-08-27 Binky Moon, LLC
@@ -8445,7 +8442,7 @@ health
 // healthcare : 2014-06-12 Binky Moon, LLC
 healthcare
 
-// help : 2014-06-26 Uniregistry, Corp.
+// help : 2014-06-26 UNR Corp.
 help
 
 // helsinki : 2015-02-05 City of Helsinki
@@ -8460,7 +8457,7 @@ hermes
 // hgtv : 2015-07-02 Lifestyle Domain Holdings, Inc.
 hgtv
 
-// hiphop : 2014-03-06 Uniregistry, Corp.
+// hiphop : 2014-03-06 UNR Corp.
 hiphop
 
 // hisamitsu : 2015-07-16 Hisamitsu Pharmaceutical Co.,Inc.
@@ -8469,7 +8466,7 @@ hisamitsu
 // hitachi : 2014-10-31 Hitachi, Ltd.
 hitachi
 
-// hiv : 2014-03-13 Uniregistry, Corp.
+// hiv : 2014-03-13 UNR Corp.
 hiv
 
 // hkt : 2015-05-14 PCCW-HKT DataCom Services Limited
@@ -8508,7 +8505,7 @@ hospital
 // host : 2014-04-17 DotHost Inc.
 host
 
-// hosting : 2014-05-29 Uniregistry, Corp.
+// hosting : 2014-05-29 UNR Corp.
 hosting
 
 // hot : 2015-08-27 Amazon Registry Services, Inc.
@@ -8682,7 +8679,7 @@ jpmorgan
 // jprs : 2014-09-18 Japan Registry Services Co., Ltd.
 jprs
 
-// juegos : 2014-03-20 Uniregistry, Corp.
+// juegos : 2014-03-20 UNR Corp.
 juegos
 
 // juniper : 2015-07-30 JUNIPER NETWORKS, INC.
@@ -8850,7 +8847,7 @@ lincoln
 // linde : 2014-12-04 Linde Aktiengesellschaft
 linde
 
-// link : 2013-11-14 Uniregistry, Corp.
+// link : 2013-11-14 UNR Corp.
 link
 
 // lipsy : 2015-06-25 Lipsy Ltd
@@ -8868,7 +8865,7 @@ lixil
 // llc : 2017-12-14 Afilias Limited
 llc
 
-// llp : 2019-08-26 Uniregistry, Corp.
+// llp : 2019-08-26 UNR Corp.
 llp
 
 // loan : 2014-11-20 dot Loan Limited
@@ -8886,7 +8883,7 @@ locus
 // loft : 2015-07-30 Annco, Inc.
 loft
 
-// lol : 2015-01-30 Uniregistry, Corp.
+// lol : 2015-01-30 UNR Corp.
 lol
 
 // london : 2013-11-14 Dot London Domains Limited
@@ -9048,7 +9045,7 @@ moe
 // moi : 2014-12-18 Amazon Registry Services, Inc.
 moi
 
-// mom : 2015-04-16 Uniregistry, Corp.
+// mom : 2015-04-16 UNR Corp.
 mom
 
 // monash : 2013-09-30 Monash University
@@ -9324,7 +9321,7 @@ philips
 // phone : 2016-06-02 Dish DBS Corporation
 phone
 
-// photo : 2013-11-14 Uniregistry, Corp.
+// photo : 2013-11-14 UNR Corp.
 photo
 
 // photography : 2013-09-20 Binky Moon, LLC
@@ -9336,7 +9333,7 @@ photos
 // physio : 2014-05-01 PhysBiz Pty Ltd
 physio
 
-// pics : 2013-11-14 Uniregistry, Corp.
+// pics : 2013-11-14 UNR Corp.
 pics
 
 // pictet : 2014-06-26 Pictet Europe S.A.
@@ -9423,7 +9420,7 @@ promo
 // properties : 2013-12-05 Binky Moon, LLC
 properties
 
-// property : 2014-05-22 Uniregistry, Corp.
+// property : 2014-05-22 UNR Corp.
 property
 
 // protection : 2015-04-23 XYZ.COM LLC
@@ -9714,7 +9711,7 @@ sew
 // sex : 2014-11-13 ICM Registry SX LLC
 sex
 
-// sexy : 2013-09-11 Uniregistry, Corp.
+// sexy : 2013-09-11 UNR Corp.
 sexy
 
 // sfr : 2015-08-13 Societe Francaise du Radiotelephone - SFR
@@ -9945,7 +9942,7 @@ tatamotors
 // tatar : 2014-04-24 Limited Liability Company "Coordination Center of Regional Domain of Tatarstan Republic"
 tatar
 
-// tattoo : 2013-08-30 Uniregistry, Corp.
+// tattoo : 2013-08-30 UNR Corp.
 tattoo
 
 // tax : 2014-03-20 Binky Moon, LLC
@@ -10488,9 +10485,6 @@ xin
 // xn--kcrx77d1x4a : 2014-11-07 Koninklijke Philips N.V.
 飞利浦
 
-// xn--kpu716f : 2014-12-22 Richemont DNS Inc.
-手表
-
 // xn--kput3i : 2014-02-13 Beijing RITT-Net Technology Development Co., Ltd
 手机
 
@@ -10544,9 +10538,6 @@ xin
 
 // xn--p1acf : 2013-12-12 Rusnames Limited
 рус
-
-// xn--pbt977c : 2014-12-22 Richemont DNS Inc.
-珠宝
 
 // xn--pssy2u : 2015-01-15 VeriSign Sarl
 大拿
