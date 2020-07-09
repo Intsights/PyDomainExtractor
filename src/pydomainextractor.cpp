@@ -392,6 +392,95 @@ DomainExtractor_extract(
 }
 
 static PyObject *
+DomainExtractor_extract_from_url(
+    DomainExtractorObject * self,
+    PyObject * const* args,
+    Py_ssize_t nargs
+)
+{
+    if (nargs != 1) {
+        PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
+
+        return NULL;
+    }
+
+    const char * input = PyUnicode_AsUTF8(args[0]);
+    std::string_view url(input);
+
+    std::size_t scheme_separator_position = url.find("://");
+    if (scheme_separator_position == std::string::npos) {
+        PyErr_SetString(PyExc_ValueError, "url is invalid: no scheme");
+
+        return NULL;
+    }
+    url = url.substr(scheme_separator_position + 3);
+
+    std::size_t path_separator = url.find("/");
+    if (path_separator != std::string::npos) {
+        url = url.substr(0, path_separator);
+    }
+
+    std::size_t authentication_separator = url.find("@");
+    if (authentication_separator != std::string::npos) {
+        url = url.substr(authentication_separator + 1);
+    }
+
+    std::size_t port_separator = url.find(":");
+    if (port_separator != std::string::npos) {
+        url = url.substr(0, port_separator);
+    }
+
+    try {
+        auto extracted_domain = self->domain_extractor->extract(url);
+
+        PyObject * dict = PyDict_New();
+
+        PyObject * subdomain_py = PyUnicode_DecodeUTF8(
+            std::get<0>(extracted_domain).data(),
+            std::get<0>(extracted_domain).size(),
+            NULL
+        );
+        PyObject * domain_py = PyUnicode_DecodeUTF8(
+            std::get<1>(extracted_domain).data(),
+            std::get<1>(extracted_domain).size(),
+            NULL
+        );
+        PyObject * suffix_py = PyUnicode_DecodeUTF8(
+            std::get<2>(extracted_domain).data(),
+            std::get<2>(extracted_domain).size(),
+            NULL
+        );
+
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(subdomain_key_py),
+            subdomain_py
+        );
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(domain_key_py),
+            domain_py
+        );
+        PyDict_SetItem(
+            dict,
+            PyUnicode_FromObject(suffix_key_py),
+            suffix_py
+        );
+
+        Py_DECREF(subdomain_py);
+        Py_DECREF(domain_py);
+        Py_DECREF(suffix_py);
+
+        return dict;
+
+    } catch (const std::runtime_error &exception) {
+        PyErr_SetString(PyExc_ValueError, exception.what());
+
+        return NULL;
+    }
+}
+
+static PyObject *
 DomainExtractor_is_valid_domain(
     DomainExtractorObject * self,
     PyObject * const* args,
@@ -420,7 +509,13 @@ static PyMethodDef DomainExtractor_methods[] = {
         "extract",
         (PyCFunction)DomainExtractor_extract,
         METH_FASTCALL,
-        "Extract a domain string into its parts\n\nextract(domain)\nArguments:\n\tdomain(str): the domain string to extract\nReturn:\n\ttuple(str, str, str): subdomain, domain, suffix\n\n"
+        "Extract a domain string into its parts\n\nextract(domain)\nArguments:\n\tdomain(str): the domain string to extract\nReturn:\n\tdict[str, str] -> The extracted parts as 'subdomain', 'domain', 'suffix'\n\n"
+    },
+    {
+        "extract_from_url",
+        (PyCFunction)DomainExtractor_extract_from_url,
+        METH_FASTCALL,
+        "Extract a domain from a url into its parts\n\nextract_from_url(url)\nArguments:\n\turl(str): the url string to extract\nReturn:\n\tdict[str, str] -> The extracted parts as 'subdomain', 'domain', 'suffix'\n\n"
     },
     {
         "is_valid_domain",
