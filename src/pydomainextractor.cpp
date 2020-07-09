@@ -504,7 +504,7 @@ static PyMethodDef DomainExtractor_methods[] = {
         "extract_from_url",
         (PyCFunction)DomainExtractor_extract_from_url,
         METH_FASTCALL,
-        "Extract a url string into its parts\n\nextract_from_url(url)\nArguments:\n\url(str): the url string to extract\nReturn:\n\ttuple(str, str, str): subdomain, domain, suffix\n\n"
+        "Extract a url string into its parts\n\nextract_from_url(url)\nArguments:\n\turl(str): the url string to extract\nReturn:\n\ttuple(str, str, str): subdomain, domain, suffix\n\n"
     },
     {
         "is_valid_domain",
