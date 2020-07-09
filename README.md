@@ -35,6 +35,7 @@ PyDomainExtractor is a library intended for parsing domain names into their part
 ### Built With
 
 * [GNU libidn2](https://www.gnu.org/software/libidn/#libidn2)
+* [Tessil/robin-map](https://github.com/Tessil/robin-map)
 * [Public Suffix List](https://publicsuffix.org/)
 
 
@@ -46,7 +47,7 @@ Test was measured on a file containing 10 million random domains from various TL
 | ------------- | ------------- | ------------- | ------------- |
 | [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 67.0s | 1.0x |
 | [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_tld | 25.8s | 2.6x |
-| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 2.76s | 24.3x |
+| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 2.67s | 25.1x |
 
 ### Prerequisites
 

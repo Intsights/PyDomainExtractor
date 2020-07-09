@@ -3,6 +3,7 @@
 #include <structmember.h>
 #include <unordered_set>
 #include <string>
+#include <string_view>
 #include <cstring>
 #include <sstream>
 #include <locale>
@@ -12,6 +13,7 @@
 #include <cpprest/base_uri.h>
 #include <cpprest/uri.h>
 #include <cpprest/uri_builder.h>
+#include <tsl/robin_set.h>
 
 #include "public_suffix_list.h"
 
@@ -59,7 +61,6 @@ class DomainExtractor {
             }
         }
         ~DomainExtractor() {}
-
 
         std::unordered_set<std::string> get_all_permutations(
             const std::string & tld,
@@ -151,7 +152,7 @@ class DomainExtractor {
             std::string_view extracted_suffix;
             std::size_t last_period_position = domain.find_last_of('.');
             if (last_period_position == std::string::npos) {
-                if (this->known_tlds_views.count(domain) == 1) {
+                if (this->known_tlds_views.contains(domain) == true) {
                     return domain;
                 } else {
                     return "";
@@ -160,13 +161,13 @@ class DomainExtractor {
 
             while (true) {
                 std::string_view current_suffix = domain.substr(last_period_position + 1);
-                if (this->known_tlds_views.count(current_suffix) == 0) {
+                if (this->known_tlds_views.contains(current_suffix) == false) {
                     break;
                 }
                 extracted_suffix = current_suffix;
                 last_period_position = domain.find_last_of('.', last_period_position - 1);
                 if (last_period_position == std::string::npos) {
-                    if (this->known_tlds_views.count(domain) == 1) {
+                    if (this->known_tlds_views.contains(domain) == true) {
                         extracted_suffix = domain;
                     }
 
@@ -174,18 +175,18 @@ class DomainExtractor {
                 }
             }
 
-            if (this->wildcard_tlds_views.count(extracted_suffix) == 1) {
+            if (this->wildcard_tlds_views.contains(extracted_suffix) == true) {
                 std::size_t leftover_domain_size = domain.size() - extracted_suffix.size() - 1;
                 if (leftover_domain_size > 0) {
                     std::size_t period_position = domain.find_last_of('.', leftover_domain_size - 1);
                     if (period_position == std::string::npos) {
-                        if (this->blacklisted_tlds_views.count(domain) == 0) {
+                        if (this->blacklisted_tlds_views.contains(domain) == false) {
                             return domain;
                         } else {
                             return extracted_suffix;
                         }
                     } else {
-                        if (this->blacklisted_tlds_views.count(domain.substr(period_position + 1)) == 1) {
+                        if (this->blacklisted_tlds_views.contains(domain.substr(period_position + 1)) == true) {
                             return extracted_suffix;
                         } else {
                             return domain.substr(period_position + 1);
@@ -264,12 +265,12 @@ class DomainExtractor {
             return true;
         }
 
-        std::unordered_set<std::string> known_tlds;
-        std::unordered_set<std::string> blacklisted_tlds;
-        std::unordered_set<std::string> wildcard_tlds;
-        std::unordered_set<std::string_view> known_tlds_views;
-        std::unordered_set<std::string_view> blacklisted_tlds_views;
-        std::unordered_set<std::string_view> wildcard_tlds_views;
+        tsl::robin_set<std::string> known_tlds;
+        tsl::robin_set<std::string> blacklisted_tlds;
+        tsl::robin_set<std::string> wildcard_tlds;
+        tsl::robin_set<std::string_view> known_tlds_views;
+        tsl::robin_set<std::string_view> blacklisted_tlds_views;
+        tsl::robin_set<std::string_view> wildcard_tlds_views;
 };
 
 
