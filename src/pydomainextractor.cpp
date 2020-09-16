@@ -6,6 +6,7 @@
 #include <string_view>
 #include <cstring>
 #include <sstream>
+#include <iostream>
 #include <locale>
 #include <codecvt>
 #include <memory>
@@ -277,16 +278,12 @@ typedef struct {
 } DomainExtractorObject;
 
 
-static void
-DomainExtractor_dealloc(DomainExtractorObject *self)
-{
+static void DomainExtractor_dealloc(DomainExtractorObject *self) {
     Py_TYPE(self)->tp_free((PyObject *) self);
     self->domain_extractor.reset();
 }
 
-static PyObject *
-DomainExtractor_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
-{
+static PyObject * DomainExtractor_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
     DomainExtractorObject *self;
     self = (DomainExtractorObject *) type->tp_alloc(type, 0);
 
@@ -294,9 +291,7 @@ DomainExtractor_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 }
 
 
-static int
-DomainExtractor_init(DomainExtractorObject *self, PyObject *args, PyObject *kwds)
-{
+static int DomainExtractor_init(DomainExtractorObject *self, PyObject *args, PyObject *kwds) {
     const char * suffix_list_data = "";
 
     static char * kwlist[] = {
@@ -324,16 +319,28 @@ static PyMemberDef DomainExtractor_members[] = {
 };
 
 
-PyObject * subdomain_key_py = PyUnicode_FromString("subdomain");
-PyObject * domain_key_py = PyUnicode_FromString("domain");
-PyObject * suffix_key_py = PyUnicode_FromString("suffix");
+static PyStructSequence_Field extracted_domain_fields[] = {
+    {"subdomain", NULL},
+    {"domain", NULL},
+    {"suffix", NULL},
+    {NULL}
+};
+
+static PyStructSequence_Desc extracted_domain_desc = {
+    "ExtractedDomain",
+    NULL,
+    extracted_domain_fields,
+    3
+};
+static PyTypeObject ExtractedDomainType = {0, 0, 0, 0, 0, 0};
+
+
 static PyObject *
 DomainExtractor_extract(
     DomainExtractorObject * self,
     PyObject * const* args,
     Py_ssize_t nargs
-)
-{
+) {
     if (nargs != 1) {
         PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
 
@@ -345,7 +352,7 @@ DomainExtractor_extract(
     try {
         auto extracted_domain = self->domain_extractor->extract(input);
 
-        PyObject * dict = PyDict_New();
+        PyObject * extracted_domain_namedtuple = PyStructSequence_New(&ExtractedDomainType);
 
         PyObject * subdomain_py = PyUnicode_DecodeUTF8(
             std::get<0>(extracted_domain).data(),
@@ -363,27 +370,11 @@ DomainExtractor_extract(
             NULL
         );
 
-        PyDict_SetItem(
-            dict,
-            PyUnicode_FromObject(subdomain_key_py),
-            subdomain_py
-        );
-        PyDict_SetItem(
-            dict,
-            PyUnicode_FromObject(domain_key_py),
-            domain_py
-        );
-        PyDict_SetItem(
-            dict,
-            PyUnicode_FromObject(suffix_key_py),
-            suffix_py
-        );
+        PyStructSequence_SET_ITEM(extracted_domain_namedtuple, 0, subdomain_py);
+        PyStructSequence_SET_ITEM(extracted_domain_namedtuple, 1, domain_py);
+        PyStructSequence_SET_ITEM(extracted_domain_namedtuple, 2, suffix_py);
 
-        Py_DECREF(subdomain_py);
-        Py_DECREF(domain_py);
-        Py_DECREF(suffix_py);
-
-        return dict;
+        return extracted_domain_namedtuple;
     } catch (const std::runtime_error &exception) {
         PyErr_SetString(PyExc_ValueError, exception.what());
 
@@ -396,16 +387,14 @@ DomainExtractor_extract_from_url(
     DomainExtractorObject * self,
     PyObject * const* args,
     Py_ssize_t nargs
-)
-{
+) {
     if (nargs != 1) {
         PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
 
         return NULL;
     }
 
-    const char * input = PyUnicode_AsUTF8(args[0]);
-    std::string_view url(input);
+    std::string_view url = PyUnicode_AsUTF8(args[0]);
 
     std::size_t scheme_separator_position = url.find("://");
     if (scheme_separator_position == std::string::npos) {
@@ -433,7 +422,7 @@ DomainExtractor_extract_from_url(
     try {
         auto extracted_domain = self->domain_extractor->extract(url);
 
-        PyObject * dict = PyDict_New();
+        PyObject * extracted_domain_namedtuple = PyStructSequence_New(&ExtractedDomainType);
 
         PyObject * subdomain_py = PyUnicode_DecodeUTF8(
             std::get<0>(extracted_domain).data(),
@@ -451,28 +440,11 @@ DomainExtractor_extract_from_url(
             NULL
         );
 
-        PyDict_SetItem(
-            dict,
-            PyUnicode_FromObject(subdomain_key_py),
-            subdomain_py
-        );
-        PyDict_SetItem(
-            dict,
-            PyUnicode_FromObject(domain_key_py),
-            domain_py
-        );
-        PyDict_SetItem(
-            dict,
-            PyUnicode_FromObject(suffix_key_py),
-            suffix_py
-        );
+        PyStructSequence_SET_ITEM(extracted_domain_namedtuple, 0, subdomain_py);
+        PyStructSequence_SET_ITEM(extracted_domain_namedtuple, 1, domain_py);
+        PyStructSequence_SET_ITEM(extracted_domain_namedtuple, 2, suffix_py);
 
-        Py_DECREF(subdomain_py);
-        Py_DECREF(domain_py);
-        Py_DECREF(suffix_py);
-
-        return dict;
-
+        return extracted_domain_namedtuple;
     } catch (const std::runtime_error &exception) {
         PyErr_SetString(PyExc_ValueError, exception.what());
 
@@ -485,17 +457,14 @@ DomainExtractor_is_valid_domain(
     DomainExtractorObject * self,
     PyObject * const* args,
     Py_ssize_t nargs
-)
-{
+) {
     if (nargs != 1) {
         PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
 
         return NULL;
     }
 
-    const char * input = PyUnicode_AsUTF8(args[0]);
-
-    auto valid_domain = self->domain_extractor->is_valid_domain(std::string(input));
+    auto valid_domain = self->domain_extractor->is_valid_domain(PyUnicode_AsUTF8(args[0]));
     if (valid_domain == true) {
         Py_RETURN_TRUE;
     } else {
@@ -597,6 +566,13 @@ PyInit_pydomainextractor(void) {
 
         return NULL;
     }
+
+    if (ExtractedDomainType.tp_name == 0) {
+        PyStructSequence_InitType(&ExtractedDomainType, &extracted_domain_desc);
+    }
+
+    Py_INCREF((PyObject *) &ExtractedDomainType);
+    PyModule_AddObject(m, "ExtractedDomain", (PyObject *) &ExtractedDomainType);
 
     return m;
 }

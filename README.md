@@ -54,7 +54,12 @@ Test was measured on a file containing 10 million random domains from various TL
 | [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 2.21s |
 | [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_sld | 16.53s |
 | [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 42.45s |
-| [tld](https://github.com/barseghyanartur/tld) | publicsuffix2.get_tld | 47.07s |
+| [tld](https://github.com/barseghyanartur/tld) | tld.parse_tld | 47.07s |
+
+tldextract: 43.04433356100344s
+publicsuffix2: 34.8565802880039s
+tld: 47.11426422698423s
+pydomainextractor: 2.437951700994745s
 
 
 #### Extract From URL
@@ -63,10 +68,10 @@ Test was measured on a file containing 1 million random urls
 
 | Library  | Function | Time |
 | ------------- | ------------- | ------------- |
-| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 0.28s |
+| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract_from_url | 0.28s |
 | [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_sld | 1.91s |
 | [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 5.55s |
-| [tld](https://github.com/barseghyanartur/tld) | publicsuffix2.get_tld | 5.98s |
+| [tld](https://github.com/barseghyanartur/tld) | tld.parse_tld | 5.98s |
 
 
 ### Prerequisites
