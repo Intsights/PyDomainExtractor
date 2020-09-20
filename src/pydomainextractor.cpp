@@ -6,7 +6,6 @@
 #include <string_view>
 #include <cstring>
 #include <sstream>
-#include <iostream>
 #include <locale>
 #include <codecvt>
 #include <memory>
@@ -283,6 +282,7 @@ static void DomainExtractor_dealloc(DomainExtractorObject *self) {
     self->domain_extractor.reset();
 }
 
+
 static PyObject * DomainExtractor_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
     DomainExtractorObject *self;
     self = (DomainExtractorObject *) type->tp_alloc(type, 0);
@@ -325,7 +325,6 @@ static PyStructSequence_Field extracted_domain_fields[] = {
     {"suffix", NULL},
     {NULL}
 };
-
 static PyStructSequence_Desc extracted_domain_desc = {
     "ExtractedDomain",
     NULL,
@@ -335,8 +334,7 @@ static PyStructSequence_Desc extracted_domain_desc = {
 static PyTypeObject ExtractedDomainType = {0, 0, 0, 0, 0, 0};
 
 
-static PyObject *
-DomainExtractor_extract(
+static PyObject * DomainExtractor_extract(
     DomainExtractorObject * self,
     PyObject * const* args,
     Py_ssize_t nargs
@@ -353,26 +351,30 @@ DomainExtractor_extract(
         auto extracted_domain = self->domain_extractor->extract(input);
 
         PyObject * extracted_domain_namedtuple = PyStructSequence_New(&ExtractedDomainType);
-
-        PyObject * subdomain_py = PyUnicode_DecodeUTF8(
-            std::get<0>(extracted_domain).data(),
-            std::get<0>(extracted_domain).size(),
-            NULL
+        PyStructSequence_SET_ITEM(
+            extracted_domain_namedtuple,
+            0,
+            PyUnicode_FromStringAndSize(
+                std::get<0>(extracted_domain).data(),
+                std::get<0>(extracted_domain).size()
+            )
         );
-        PyObject * domain_py = PyUnicode_DecodeUTF8(
-            std::get<1>(extracted_domain).data(),
-            std::get<1>(extracted_domain).size(),
-            NULL
+        PyStructSequence_SET_ITEM(
+            extracted_domain_namedtuple,
+            1,
+            PyUnicode_FromStringAndSize(
+                std::get<1>(extracted_domain).data(),
+                std::get<1>(extracted_domain).size()
+            )
         );
-        PyObject * suffix_py = PyUnicode_DecodeUTF8(
-            std::get<2>(extracted_domain).data(),
-            std::get<2>(extracted_domain).size(),
-            NULL
+        PyStructSequence_SET_ITEM(
+            extracted_domain_namedtuple,
+            2,
+            PyUnicode_FromStringAndSize(
+                std::get<2>(extracted_domain).data(),
+                std::get<2>(extracted_domain).size()
+            )
         );
-
-        PyStructSequence_SET_ITEM(extracted_domain_namedtuple, 0, subdomain_py);
-        PyStructSequence_SET_ITEM(extracted_domain_namedtuple, 1, domain_py);
-        PyStructSequence_SET_ITEM(extracted_domain_namedtuple, 2, suffix_py);
 
         return extracted_domain_namedtuple;
     } catch (const std::runtime_error &exception) {
@@ -382,8 +384,8 @@ DomainExtractor_extract(
     }
 }
 
-static PyObject *
-DomainExtractor_extract_from_url(
+
+static PyObject * DomainExtractor_extract_from_url(
     DomainExtractorObject * self,
     PyObject * const* args,
     Py_ssize_t nargs
@@ -423,26 +425,30 @@ DomainExtractor_extract_from_url(
         auto extracted_domain = self->domain_extractor->extract(url);
 
         PyObject * extracted_domain_namedtuple = PyStructSequence_New(&ExtractedDomainType);
-
-        PyObject * subdomain_py = PyUnicode_DecodeUTF8(
-            std::get<0>(extracted_domain).data(),
-            std::get<0>(extracted_domain).size(),
-            NULL
+        PyStructSequence_SET_ITEM(
+            extracted_domain_namedtuple,
+            0,
+            PyUnicode_FromStringAndSize(
+                std::get<0>(extracted_domain).data(),
+                std::get<0>(extracted_domain).size()
+            )
         );
-        PyObject * domain_py = PyUnicode_DecodeUTF8(
-            std::get<1>(extracted_domain).data(),
-            std::get<1>(extracted_domain).size(),
-            NULL
+        PyStructSequence_SET_ITEM(
+            extracted_domain_namedtuple,
+            1,
+            PyUnicode_FromStringAndSize(
+                std::get<1>(extracted_domain).data(),
+                std::get<1>(extracted_domain).size()
+            )
         );
-        PyObject * suffix_py = PyUnicode_DecodeUTF8(
-            std::get<2>(extracted_domain).data(),
-            std::get<2>(extracted_domain).size(),
-            NULL
+        PyStructSequence_SET_ITEM(
+            extracted_domain_namedtuple,
+            2,
+            PyUnicode_FromStringAndSize(
+                std::get<2>(extracted_domain).data(),
+                std::get<2>(extracted_domain).size()
+            )
         );
-
-        PyStructSequence_SET_ITEM(extracted_domain_namedtuple, 0, subdomain_py);
-        PyStructSequence_SET_ITEM(extracted_domain_namedtuple, 1, domain_py);
-        PyStructSequence_SET_ITEM(extracted_domain_namedtuple, 2, suffix_py);
 
         return extracted_domain_namedtuple;
     } catch (const std::runtime_error &exception) {
@@ -452,8 +458,8 @@ DomainExtractor_extract_from_url(
     }
 }
 
-static PyObject *
-DomainExtractor_is_valid_domain(
+
+static PyObject * DomainExtractor_is_valid_domain(
     DomainExtractorObject * self,
     PyObject * const* args,
     Py_ssize_t nargs
@@ -470,6 +476,21 @@ DomainExtractor_is_valid_domain(
     } else {
         Py_RETURN_FALSE;
     }
+}
+
+
+static PyObject * DomainExtractor_get_tld_list(
+    DomainExtractorObject * self,
+    PyObject * const* noargs
+) {
+    auto tlds = PyList_New(self->domain_extractor->known_tlds.size());
+    int i = 0;
+    for (auto tld: self->domain_extractor->known_tlds) {
+        PyList_SET_ITEM(tlds, i, PyUnicode_FromString(tld.c_str()));
+        i++;
+    }
+
+    return tlds;
 }
 
 
@@ -491,6 +512,12 @@ static PyMethodDef DomainExtractor_methods[] = {
         (PyCFunction)DomainExtractor_is_valid_domain,
         METH_FASTCALL,
         "Checks whether a domain is a valid domain\n\nis_valid_domain(domain)\nArguments:\n\tdomain(str): the domain string to validate\nReturn:\n\tbool: True if valid or False if invalid\n\n"
+    },
+    {
+        "get_tld_list",
+        (PyCFunction)DomainExtractor_get_tld_list,
+        METH_NOARGS,
+        "Return a list of all the known tlds\n\nget_tld_list()\nArguments:\n\tNone\nReturn:\n\tlist[str]: list of tlds\n\n"
     },
     {NULL}  /* Sentinel */
 };
@@ -568,7 +595,12 @@ PyInit_pydomainextractor(void) {
     }
 
     if (ExtractedDomainType.tp_name == 0) {
-        PyStructSequence_InitType(&ExtractedDomainType, &extracted_domain_desc);
+        if (-1 == PyStructSequence_InitType2(&ExtractedDomainType, &extracted_domain_desc)) {
+            Py_DECREF(&DomainExtractorType);
+            Py_DECREF(m);
+
+            return NULL;
+        }
     }
 
     Py_INCREF((PyObject *) &ExtractedDomainType);

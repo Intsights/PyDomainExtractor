@@ -26,6 +26,7 @@
   - [Extraction](#extraction)
   - [URL Extraction](#url-extraction)
   - [Validation](#validation)
+  - [TLDs List](#tlds-list)
 - [License](#license)
 - [Contact](#contact)
 
@@ -179,6 +180,25 @@ domain_extractor.is_valid_domain('-sub.domain.com')
 
 domain_extractor.is_valid_domain('\xF0\x9F\x98\x81nonalphanum.com')
 >>> False
+```
+
+
+### TLDs List
+
+```python
+import pydomainextractor
+
+
+# Loads the current supplied version of PublicSuffixList from the repository. Does not download any data.
+domain_extractor = pydomainextractor.DomainExtractor()
+
+domain_extractor.get_tld_list()
+>>> [
+>>>     'bostik',
+>>>     'backyards.banzaicloud.io',
+>>>     'biz.bb',
+>>>     ...
+>>> ]
 ```
 
 

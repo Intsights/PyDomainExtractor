@@ -814,3 +814,34 @@ class DomainExtractorLoadTestCase(
                 'suffix': 'custom.tld',
             },
         )
+
+    def test_get_tld_list(
+        self,
+    ):
+        domain_extractor = pydomainextractor.DomainExtractor(
+            'com\n'
+        )
+
+        self.assertEqual(
+            first=domain_extractor.get_tld_list(),
+            second=[
+                'com',
+            ],
+        )
+
+        domain_extractor = pydomainextractor.DomainExtractor(
+            'com\n'
+            'net\n'
+            'org\n'
+            'uk.com\n'
+        )
+
+        self.assertCountEqual(
+            first=domain_extractor.get_tld_list(),
+            second=[
+                'com',
+                'net',
+                'org',
+                'uk.com',
+            ],
+        )
