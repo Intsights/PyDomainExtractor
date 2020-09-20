@@ -5,7 +5,7 @@ import glob
 
 setuptools.setup(
     name='PyDomainExtractor',
-    version='0.8.0',
+    version='0.8.1',
     author='Gal Ben David',
     author_email='gal@intsights.com',
     url='https://github.com/Intsights/PyDomainExtractor',
@@ -39,7 +39,6 @@ setuptools.setup(
             ),
             language='c++',
             extra_compile_args=[
-                '-Ofast',
                 '-std=c++17',
             ],
             extra_link_args=[

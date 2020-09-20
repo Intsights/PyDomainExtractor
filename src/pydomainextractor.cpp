@@ -277,16 +277,13 @@ typedef struct {
 } DomainExtractorObject;
 
 
-static void
-DomainExtractor_dealloc(DomainExtractorObject *self)
-{
+static void DomainExtractor_dealloc(DomainExtractorObject *self) {
     Py_TYPE(self)->tp_free((PyObject *) self);
     self->domain_extractor.reset();
 }
 
-static PyObject *
-DomainExtractor_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
-{
+
+static PyObject * DomainExtractor_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
     DomainExtractorObject *self;
     self = (DomainExtractorObject *) type->tp_alloc(type, 0);
 
@@ -294,9 +291,7 @@ DomainExtractor_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 }
 
 
-static int
-DomainExtractor_init(DomainExtractorObject *self, PyObject *args, PyObject *kwds)
-{
+static int DomainExtractor_init(DomainExtractorObject *self, PyObject *args, PyObject *kwds) {
     const char * suffix_list_data = "";
 
     static char * kwlist[] = {
@@ -327,13 +322,11 @@ static PyMemberDef DomainExtractor_members[] = {
 PyObject * subdomain_key_py = PyUnicode_FromString("subdomain");
 PyObject * domain_key_py = PyUnicode_FromString("domain");
 PyObject * suffix_key_py = PyUnicode_FromString("suffix");
-static PyObject *
-DomainExtractor_extract(
+static PyObject * DomainExtractor_extract(
     DomainExtractorObject * self,
     PyObject * const* args,
     Py_ssize_t nargs
-)
-{
+) {
     if (nargs != 1) {
         PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
 
@@ -391,13 +384,12 @@ DomainExtractor_extract(
     }
 }
 
-static PyObject *
-DomainExtractor_extract_from_url(
+
+static PyObject * DomainExtractor_extract_from_url(
     DomainExtractorObject * self,
     PyObject * const* args,
     Py_ssize_t nargs
-)
-{
+) {
     if (nargs != 1) {
         PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
 
@@ -480,13 +472,12 @@ DomainExtractor_extract_from_url(
     }
 }
 
-static PyObject *
-DomainExtractor_is_valid_domain(
+
+static PyObject * DomainExtractor_is_valid_domain(
     DomainExtractorObject * self,
     PyObject * const* args,
     Py_ssize_t nargs
-)
-{
+) {
     if (nargs != 1) {
         PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
 
@@ -501,6 +492,21 @@ DomainExtractor_is_valid_domain(
     } else {
         Py_RETURN_FALSE;
     }
+}
+
+
+static PyObject * DomainExtractor_get_tld_list(
+    DomainExtractorObject * self,
+    PyObject * const* noargs
+) {
+    auto tlds = PyList_New(self->domain_extractor->known_tlds.size());
+    int i = 0;
+    for (auto tld: self->domain_extractor->known_tlds) {
+        PyList_SET_ITEM(tlds, i, PyUnicode_FromString(tld.c_str()));
+        i++;
+    }
+
+    return tlds;
 }
 
 
@@ -522,6 +528,12 @@ static PyMethodDef DomainExtractor_methods[] = {
         (PyCFunction)DomainExtractor_is_valid_domain,
         METH_FASTCALL,
         "Checks whether a domain is a valid domain\n\nis_valid_domain(domain)\nArguments:\n\tdomain(str): the domain string to validate\nReturn:\n\tbool: True if valid or False if invalid\n\n"
+    },
+    {
+        "get_tld_list",
+        (PyCFunction)DomainExtractor_get_tld_list,
+        METH_NOARGS,
+        "Return a list of all the known tlds\n\nget_tld_list()\nArguments:\n\tNone\nReturn:\n\tlist[str]: list of tlds\n\n"
     },
     {NULL}  /* Sentinel */
 };
