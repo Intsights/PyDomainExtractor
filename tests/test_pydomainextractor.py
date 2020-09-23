@@ -349,11 +349,6 @@ class DomainExtractorExtractionTestCase(
         ):
             self.domain_extractor.extract_from_url('co.uk')
 
-        with self.assertRaises(
-            ValueError,
-        ):
-            self.domain_extractor.extract_from_url('//mail.google.com/mail')
-
         self.assertEqual(
             first=self.domain_extractor.extract_from_url('http://www.google.com'),
             second={
@@ -638,6 +633,22 @@ class DomainExtractorExtractionTestCase(
             first=self.domain_extractor.extract_from_url('http://admin:password1@www.google.com:666/secret/admin/interface?param1=42'),
             second={
                 'subdomain': 'www',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url('//admin:password1@www.google.com:666/secret/admin/interface?param1=42'),
+            second={
+                'subdomain': 'www',
+                'domain': 'google',
+                'suffix': 'com',
+            },
+        )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url('//mail.google.com/mail'),
+            second={
+                'subdomain': 'mail',
                 'domain': 'google',
                 'suffix': 'com',
             },

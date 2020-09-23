@@ -399,13 +399,13 @@ static PyObject * DomainExtractor_extract_from_url(
     const char * input = PyUnicode_AsUTF8(args[0]);
     std::string_view url(input);
 
-    std::size_t scheme_separator_position = url.find("://");
+    std::size_t scheme_separator_position = url.find("//");
     if (scheme_separator_position == std::string::npos) {
         PyErr_SetString(PyExc_ValueError, "url is invalid: no scheme");
 
         return NULL;
     }
-    url = url.substr(scheme_separator_position + 3);
+    url = url.substr(scheme_separator_position + 2);
 
     std::size_t path_separator = url.find("/");
     if (path_separator != std::string::npos) {
