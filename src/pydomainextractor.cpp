@@ -324,16 +324,9 @@ PyObject * domain_key_py = PyUnicode_FromString("domain");
 PyObject * suffix_key_py = PyUnicode_FromString("suffix");
 static PyObject * DomainExtractor_extract(
     DomainExtractorObject * self,
-    PyObject * const* args,
-    Py_ssize_t nargs
+    PyObject * arg
 ) {
-    if (nargs != 1) {
-        PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
-
-        return NULL;
-    }
-
-    const char * input = PyUnicode_AsUTF8(args[0]);
+    const char * input = PyUnicode_AsUTF8(arg);
 
     try {
         auto extracted_domain = self->domain_extractor->extract(input);
@@ -387,16 +380,9 @@ static PyObject * DomainExtractor_extract(
 
 static PyObject * DomainExtractor_extract_from_url(
     DomainExtractorObject * self,
-    PyObject * const* args,
-    Py_ssize_t nargs
+    PyObject * arg
 ) {
-    if (nargs != 1) {
-        PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
-
-        return NULL;
-    }
-
-    const char * input = PyUnicode_AsUTF8(args[0]);
+    const char * input = PyUnicode_AsUTF8(arg);
     std::string_view url(input);
 
     std::size_t scheme_separator_position = url.find("//");
@@ -475,16 +461,9 @@ static PyObject * DomainExtractor_extract_from_url(
 
 static PyObject * DomainExtractor_is_valid_domain(
     DomainExtractorObject * self,
-    PyObject * const* args,
-    Py_ssize_t nargs
+    PyObject * arg
 ) {
-    if (nargs != 1) {
-        PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
-
-        return NULL;
-    }
-
-    const char * input = PyUnicode_AsUTF8(args[0]);
+    const char * input = PyUnicode_AsUTF8(arg);
 
     auto valid_domain = self->domain_extractor->is_valid_domain(std::string(input));
     if (valid_domain == true) {
@@ -514,19 +493,19 @@ static PyMethodDef DomainExtractor_methods[] = {
     {
         "extract",
         (PyCFunction)DomainExtractor_extract,
-        METH_FASTCALL,
+        METH_O,
         "Extract a domain string into its parts\n\nextract(domain)\nArguments:\n\tdomain(str): the domain string to extract\nReturn:\n\tdict[str, str] -> The extracted parts as 'subdomain', 'domain', 'suffix'\n\n"
     },
     {
         "extract_from_url",
         (PyCFunction)DomainExtractor_extract_from_url,
-        METH_FASTCALL,
+        METH_O,
         "Extract a domain from a url into its parts\n\nextract_from_url(url)\nArguments:\n\turl(str): the url string to extract\nReturn:\n\tdict[str, str] -> The extracted parts as 'subdomain', 'domain', 'suffix'\n\n"
     },
     {
         "is_valid_domain",
         (PyCFunction)DomainExtractor_is_valid_domain,
-        METH_FASTCALL,
+        METH_O,
         "Checks whether a domain is a valid domain\n\nis_valid_domain(domain)\nArguments:\n\tdomain(str): the domain string to validate\nReturn:\n\tbool: True if valid or False if invalid\n\n"
     },
     {
