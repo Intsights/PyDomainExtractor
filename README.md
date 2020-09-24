@@ -64,7 +64,7 @@ Test was measured on a file containing 1 million random urls (Sep. 24th 2020)
 
 | Library  | Function | Time |
 | ------------- | ------------- | ------------- |
-| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 2.76s |
+| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract_from_url | 2.76s |
 | [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_sld | 14.33s |
 | [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 44.34s |
 | [tld](https://github.com/barseghyanartur/tld) | tld.parse_tld | 79.13s |
