@@ -48,31 +48,26 @@ PyDomainExtractor is a library intended for parsing domain names into their part
 
 #### Extract From Domain
 
-Test was measured on a file containing 10 million random domains from various TLDs
+Test was measured on a file containing 10 million random domains from various TLDs (Sep. 24th 2020)
 
 | Library  | Function | Time |
 | ------------- | ------------- | ------------- |
-| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 2.21s |
-| [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_sld | 16.53s |
-| [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 42.45s |
-| [tld](https://github.com/barseghyanartur/tld) | tld.parse_tld | 47.07s |
-
-tldextract: 43.04433356100344s
-publicsuffix2: 34.8565802880039s
-tld: 47.11426422698423s
-pydomainextractor: 2.437951700994745s
+| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 2.30s |
+| [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_sld | 25.77s |
+| [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 34.22s |
+| [tld](https://github.com/barseghyanartur/tld) | tld.parse_tld | 36.64s |
 
 
 #### Extract From URL
 
-Test was measured on a file containing 1 million random urls
+Test was measured on a file containing 1 million random urls (Sep. 24th 2020)
 
 | Library  | Function | Time |
 | ------------- | ------------- | ------------- |
-| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract_from_url | 0.28s |
-| [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_sld | 1.91s |
-| [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 5.55s |
-| [tld](https://github.com/barseghyanartur/tld) | tld.parse_tld | 5.98s |
+| [PyDomainExtractor](https://github.com/Intsights/PyDomainExtractor) | pydomainextractor.extract | 2.76s |
+| [publicsuffix2](https://github.com/nexb/python-publicsuffix2) | publicsuffix2.get_sld | 14.33s |
+| [tldextract](https://github.com/john-kurkowski/tldextract) | \_\_call\_\_ | 44.34s |
+| [tld](https://github.com/barseghyanartur/tld) | tld.parse_tld | 79.13s |
 
 
 ### Prerequisites
