@@ -327,7 +327,7 @@ static PyStructSequence_Field extracted_domain_fields[] = {
 };
 static PyStructSequence_Desc extracted_domain_desc = {
     "ExtractedDomain",
-    "The result of the extract operation",
+    NULL,
     extracted_domain_fields,
     3
 };
@@ -382,7 +382,18 @@ static PyObject * DomainExtractor_extract_from_url(
     DomainExtractorObject * self,
     PyObject * arg
 ) {
-    std::string_view url = PyUnicode_AsUTF8(arg);
+<<<<<<< HEAD
+    if (nargs != 1) {
+        PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
+
+        return NULL;
+    }
+
+    std::string_view url = PyUnicode_AsUTF8(args[0]);
+=======
+    const char * input = PyUnicode_AsUTF8(arg);
+    std::string_view url(input);
+>>>>>>> master
 
     std::size_t scheme_separator_position = url.find("//");
     if (scheme_separator_position == std::string::npos) {
@@ -449,9 +460,19 @@ static PyObject * DomainExtractor_is_valid_domain(
     DomainExtractorObject * self,
     PyObject * arg
 ) {
+<<<<<<< HEAD
+    if (nargs != 1) {
+        PyErr_SetString(PyExc_ValueError, "wrong number of arguments");
+
+        return NULL;
+    }
+
+    auto valid_domain = self->domain_extractor->is_valid_domain(PyUnicode_AsUTF8(args[0]));
+=======
     const char * input = PyUnicode_AsUTF8(arg);
 
-    auto valid_domain = self->domain_extractor->is_valid_domain(input);
+    auto valid_domain = self->domain_extractor->is_valid_domain(std::string(input));
+>>>>>>> master
     if (valid_domain == true) {
         Py_RETURN_TRUE;
     } else {
