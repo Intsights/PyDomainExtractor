@@ -5,7 +5,7 @@ import glob
 
 setuptools.setup(
     name='PyDomainExtractor',
-    version='0.8.3',
+    version='0.8.4',
     author='Gal Ben David',
     author_email='gal@intsights.com',
     url='https://github.com/Intsights/PyDomainExtractor',
@@ -21,6 +21,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     keywords='domain extraction tld suffix psl c++',
     python_requires='>=3.6',

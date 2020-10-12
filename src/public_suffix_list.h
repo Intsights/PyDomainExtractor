@@ -912,16 +912,18 @@ org.do
 sld.do
 web.do
 
-// dz : https://en.wikipedia.org/wiki/.dz
+// dz : http://www.nic.dz/images/pdf_nic/charte.pdf
 dz
+art.dz
+asso.dz
 com.dz
+edu.dz
+gov.dz
 org.dz
 net.dz
-gov.dz
-edu.dz
-asso.dz
 pol.dz
-art.dz
+soc.dz
+tm.dz
 
 // ec : http://www.nic.ec/reg/paso1.asp
 // Submitted by registry <vabboud@nic.ec>
@@ -4702,13 +4704,12 @@ web.ni
 //      ccTLD for the Netherlands
 nl
 
-// no : http://www.norid.no/regelverk/index.en.html
-// The Norwegian registry has declined to notify us of updates. The web pages
-// referenced below are the official source of the data. There is also an
-// announce mailing list:
-// https://postlister.uninett.no/sympa/info/norid-diskusjon
+// no : https://www.norid.no/en/om-domenenavn/regelverk-for-no/
+// Norid geographical second level domains : https://www.norid.no/en/om-domenenavn/regelverk-for-no/vedlegg-b/
+// Norid category second level domains : https://www.norid.no/en/om-domenenavn/regelverk-for-no/vedlegg-c/
+// Norid category second-level domains managed by parties other than Norid : https://www.norid.no/en/om-domenenavn/regelverk-for-no/vedlegg-d/
 no
-// Norid generic domains : http://www.norid.no/regelverk/vedlegg-c.en.html
+// Norid category second level domains : https://www.norid.no/en/om-domenenavn/regelverk-for-no/vedlegg-c/
 fhs.no
 vgs.no
 fylkesbibl.no
@@ -4716,13 +4717,13 @@ folkebibl.no
 museum.no
 idrett.no
 priv.no
-// Non-Norid generic domains : http://www.norid.no/regelverk/vedlegg-d.en.html
+// Norid category second-level domains managed by parties other than Norid : https://www.norid.no/en/om-domenenavn/regelverk-for-no/vedlegg-d/
 mil.no
 stat.no
 dep.no
 kommune.no
 herad.no
-// no geographical names : http://www.norid.no/regelverk/vedlegg-b.en.html
+// Norid geographical second level domains : https://www.norid.no/en/om-domenenavn/regelverk-for-no/vedlegg-b/
 // counties
 aa.no
 ah.no
@@ -7114,7 +7115,7 @@ org.zw
 
 // newGTLDs
 
-// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2020-09-17T17:33:58Z
+// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2020-10-08T17:45:32Z
 // This list is auto-generated, don't edit it manually.
 // aaa : 2015-02-26 American Automobile Association, Inc.
 aaa
@@ -8612,9 +8613,6 @@ insurance
 
 // insure : 2014-03-20 Binky Moon, LLC
 insure
-
-// intel : 2015-08-06 Intel Corporation
-intel
 
 // international : 2013-11-07 Binky Moon, LLC
 international
@@ -10245,9 +10243,6 @@ weber
 // website : 2014-04-03 DotWebsite Inc.
 website
 
-// wed : 2013-10-01 Atgron, Inc.
-wed
-
 // wedding : 2014-04-24 Minds + Machines Group Limited
 wedding
 
@@ -10458,7 +10453,7 @@ xin
 // xn--fzys8d69uvgm : 2015-05-14 PCCW Enterprises Limited
 電訊盈科
 
-// xn--g2xx48c : 2015-01-30 Minds + Machines Group Limited
+// xn--g2xx48c : 2015-01-30 Nawang Heli(Xiamen) Network Service Co., LTD.
 购物
 
 // xn--gckr3f0f : 2015-02-26 Amazon Registry Services, Inc.
@@ -11237,6 +11232,10 @@ drud.us
 // Submitted by Richard Harper <richard@duckdns.org>
 duckdns.org
 
+// Bip : https://bip.sh
+// Submitted by Joel Kennedy <joel@bip.sh>
+bip.sh
+
 // bitbridge.net : Submitted by Craig Welch, abeliidev@gmail.com
 bitbridge.net
 
@@ -11588,6 +11587,10 @@ mytuleap.com
 onred.one
 staging.onred.one
 
+// One.com: https://www.one.com/
+// Submitted by Jacob Bunk Nielsen <jbn@one.com>
+service.one
+
 // Enonic : http://enonic.com/
 // Submitted by Erik Kaareng-Sunde <esu@enonic.com>
 enonic.io
@@ -11926,6 +11929,17 @@ web.app
 *.0emm.com
 appspot.com
 *.r.appspot.com
+codespot.com
+googleapis.com
+googlecode.com
+pagespeedmobilizer.com
+publishproxy.com
+withgoogle.com
+withyoutube.com
+cloudfunctions.net
+cloud.goog
+translate.goog
+
 blogspot.ae
 blogspot.al
 blogspot.am
@@ -12000,15 +12014,6 @@ blogspot.td
 blogspot.tw
 blogspot.ug
 blogspot.vn
-cloudfunctions.net
-cloud.goog
-codespot.com
-googleapis.com
-googlecode.com
-pagespeedmobilizer.com
-publishproxy.com
-withgoogle.com
-withyoutube.com
 
 // Aaron Marais' Gitlab pages: https://lab.aaronleem.co.za
 // Submitted by Aaron Marais <its_me@aaronleem.co.za>
@@ -12146,6 +12151,10 @@ pixolino.com
 // Submited by Vasiliy Sheredeko <piphon@gmail.com>
 na4u.ru
 
+// iopsys software solutions AB : https://iopsys.eu/
+// Submitted by Roman Azarenko <roman.azarenko@iopsys.eu>
+iopsys.se
+
 // IPiFony Systems, Inc. : https://www.ipifony.com/
 // Submitted by Matthew Hardeman <mhardeman@ipifony.com>
 ipifony.net
@@ -12163,29 +12172,92 @@ iobb.net
 
 //Jelastic, Inc. : https://jelastic.com/
 // Submited by Ihor Kolodyuk <ik@jelastic.com>
+mel.cloudlets.com.au
+cloud.interhostsolutions.be
+users.scale.virtualcloud.com.br
+mycloud.by
+alp1.ae.flow.ch
 appengine.flow.ch
+es-1.axarnet.cloud
+diadem.cloud
 vip.jelastic.cloud
 jele.cloud
+it1.eur.aruba.jenv-aruba.cloud
+it1.jenv-aruba.cloud
+it1-eur.jenv-arubabiz.cloud
+primetel.cloud
+uk.primetel.cloud
+ca.reclaim.cloud
+uk.reclaim.cloud
+us.reclaim.cloud
+ch.trendhosting.cloud
+de.trendhosting.cloud
 jele.club
+clicketcloud.com
+ams.cloudswitches.com
+au.cloudswitches.com
+sg.cloudswitches.com
 dopaas.com
+elastyco.com
+nv.elastyco.com
 hidora.com
+paas.hosted-by-previder.com
+rag-cloud.hosteur.com
+rag-cloud-ch.hosteur.com
 jcloud.ik-server.com
+jcloud-ver-jpc.ik-server.com
 demo.jelastic.com
+kilatiron.com
 paas.massivegrid.com
+jed.wafaicloud.com
+lon.wafaicloud.com
+ryd.wafaicloud.com
 j.scaleforce.com.cy
 jelastic.dogado.eu
+paas.leviracloud.eu
 fi.cloudplatform.fi
+demo.datacenter.fi
 paas.datacenter.fi
 jele.host
 mircloud.host
 jele.io
+ocs.opusinteractive.io
+cloud.unispace.io
+cloud-de.unispace.io
+cloud-fr1.unispace.io
+jc.neen.it
+cloud.jelastic.open.tim.it
+jcloud.kz
+upaas.kazteleport.kz
+jl.serv.net.mx
 cloudjiffy.net
+fra1-de.cloudjiffy.net
+west1-us.cloudjiffy.net
+ams1.jls.docktera.net
 jls-sto1.elastx.net
+jls-sto2.elastx.net
+jls-sto3.elastx.net
+fr-1.paas.massivegrid.net
+lon-1.paas.massivegrid.net
+lon-2.paas.massivegrid.net
+ny-1.paas.massivegrid.net
+ny-2.paas.massivegrid.net
+sg-1.paas.massivegrid.net
 jelastic.saveincloud.net
+nordeste-idc.saveincloud.net
+j.scaleforce.net
+jelastic.tsukaeru.net
+atl.jelastic.vps-host.net
+njs.jelastic.vps-host.net
+unicloud.pl
+mircloud.ru
 jelastic.regruhosting.ru
+enscaled.sg
 jele.site
 jelastic.team
 j.layershift.co.uk
+phx.enscaled.us
+mircloud.us
 
 // Jino : https://www.jino.ru
 // Submitted by Sergey Ulyashin <ulyashin@jino.ru>
@@ -12278,6 +12350,10 @@ members.linode.com
 // LiquidNet Ltd : http://www.liquidnetlimited.com/
 // Submitted by Victor Velchev <admin@liquidnetlimited.com>
 we.bs
+
+// localzone.xyz
+// Submitted by Kenny Niehage <hello@yahe.sh>
+localzone.xyz
 
 // Log'in Line : https://www.loginline.com/
 // Submitted by Rémi Mach <remi.mach@loginline.com>
@@ -13115,6 +13191,7 @@ cust.testing.thingdust.io
 // Submitted by Mark Staarink <mark@tlon.io>
 arvo.network
 azimuth.network
+tlon.network
 
 // TownNews.com : http://www.townnews.com
 // Submitted by Dustin Ward <dward@townnews.com>
@@ -13268,6 +13345,15 @@ v.ua
 // Submitted by Masayuki Note <masa@blade.wafflecell.com>
 wafflecell.com
 
+// WapBlog.ID : https://www.wapblog.id
+// Submitted by Fajar Sodik <official@wapblog.id>
+idnblogger.com
+indowapblog.com
+bloghp.id
+wblog.id
+wbq.me
+fastblog.net
+
 // WebHare bv: https://www.webhare.com/
 // Submitted by Arnold Hendriks <info@webhare.com>
 *.webhare.dev
@@ -13379,7 +13465,9 @@ cx.ua
 
 // WP Engine : https://wpengine.com/
 // Submitted by Michael Smith <michael.smith@wpengine.com>
+// Submitted by Brandon DuRette <brandon.durette@wpengine.com>
 wpenginepowered.com
+js.wpenginepowered.com
 
 // Impertrix Solutions : <https://impertrixcdn.com>
 // Submitted by Zhixiang Zhao <csuite@impertrix.com>
