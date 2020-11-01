@@ -752,6 +752,32 @@ class DomainExtractorExtractionTestCase(
             expr=self.domain_extractor.is_valid_domain('com.'),
         )
 
+    def test_mutability(
+        self,
+    ):
+        domain_to_test_original = 'Google.COM'
+        domain_to_test = 'Google.COM'
+
+        self.domain_extractor.is_valid_domain(domain_to_test)
+        self.assertEqual(
+            first=domain_to_test_original,
+            second=domain_to_test,
+        )
+
+        self.domain_extractor.extract(domain_to_test)
+        self.assertEqual(
+            first=domain_to_test_original,
+            second=domain_to_test,
+        )
+
+        url_to_test_original = 'http://Google.COM/A.php?Bla=true'
+        url_to_test = 'http://Google.COM/A.php?Bla=true'
+        self.domain_extractor.extract_from_url(url_to_test)
+        self.assertEqual(
+            first=url_to_test_original,
+            second=url_to_test,
+        )
+
 
 class DomainExtractorLoadTestCase(
     unittest.TestCase,

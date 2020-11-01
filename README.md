@@ -39,7 +39,7 @@ PyDomainExtractor is a library intended for parsing domain names into their part
 ### Built With
 
 * [GNU libidn2](https://www.gnu.org/software/libidn/#libidn2)
-* [Tessil/robin-map](https://github.com/Tessil/robin-map)
+* [robin-hood-hashing](https://github.com/martinus/robin-hood-hashing)
 * [Public Suffix List](https://publicsuffix.org/)
 
 

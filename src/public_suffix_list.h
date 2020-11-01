@@ -1157,7 +1157,7 @@ gov.gr
 // gs : https://en.wikipedia.org/wiki/.gs
 gs
 
-// gt : http://www.gt/politicas_de_registro.html
+// gt : https://www.gt/sitio/registration_policy.php?lang=en
 gt
 com.gt
 edu.gt
@@ -7115,7 +7115,7 @@ org.zw
 
 // newGTLDs
 
-// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2020-10-08T17:45:32Z
+// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2020-10-28T17:55:28Z
 // This list is auto-generated, don't edit it manually.
 // aaa : 2015-02-26 American Automobile Association, Inc.
 aaa
@@ -7333,7 +7333,7 @@ author
 // auto : 2014-11-13 XYZ.COM LLC
 auto
 
-// autos : 2014-01-09 DERAutos, LLC
+// autos : 2014-01-09 XYZ.COM LLC
 autos
 
 // avianca : 2015-01-08 Avianca Holdings S.A.
@@ -7483,7 +7483,7 @@ bmw
 // bnpparibas : 2014-05-29 BNP Paribas
 bnpparibas
 
-// boats : 2014-12-04 DERBoats, LLC
+// boats : 2014-12-04 XYZ.COM LLC
 boats
 
 // boehringer : 2015-07-09 Boehringer Ingelheim International GmbH
@@ -7522,7 +7522,7 @@ bot
 // boutique : 2013-11-14 Binky Moon, LLC
 boutique
 
-// box : 2015-11-12 .BOX INC.
+// box : 2015-11-12 Intercap Registry Inc.
 box
 
 // bradesco : 2014-12-18 Banco Bradesco S.A.
@@ -8506,7 +8506,7 @@ homedepot
 // homegoods : 2015-07-16 The TJX Companies, Inc.
 homegoods
 
-// homes : 2014-01-09 DERHomes, LLC
+// homes : 2014-01-09 XYZ.COM LLC
 homes
 
 // homesense : 2015-07-16 The TJX Companies, Inc.
@@ -9082,7 +9082,7 @@ moscow
 // moto : 2015-06-04 Motorola Trademark Holdings, LLC
 moto
 
-// motorcycles : 2014-01-09 DERMotorcycles, LLC
+// motorcycles : 2014-01-09 XYZ.COM LLC
 motorcycles
 
 // mov : 2014-01-30 Charleston Road Registry Inc.
@@ -9247,7 +9247,7 @@ one
 // ong : 2014-03-06 Public Interest Registry
 ong
 
-// onl : 2013-09-16 I-Registry Ltd.
+// onl : 2013-09-16 iRegistry GmbH
 onl
 
 // online : 2015-01-15 DotOnline Inc.
@@ -9544,7 +9544,7 @@ reviews
 // rexroth : 2015-06-18 Robert Bosch GMBH
 rexroth
 
-// rich : 2013-11-21 I-Registry Ltd.
+// rich : 2013-11-21 iRegistry GmbH
 rich
 
 // richardli : 2015-05-14 Pacific Century Asset Management (HK) Limited
@@ -10600,7 +10600,7 @@ vermögensberatung
 // xyz : 2013-12-05 XYZ.COM LLC
 xyz
 
-// yachts : 2014-01-09 DERYachts, LLC
+// yachts : 2014-01-09 XYZ.COM LLC
 yachts
 
 // yahoo : 2015-04-02 Yahoo! Domain Services Inc.
@@ -10684,12 +10684,6 @@ barsy.ca
 // all-inkl.com : https://all-inkl.com
 // Submitted by Werner Kaltofen <wk@all-inkl.com>
 kasserver.com
-
-// Algorithmia, Inc. : algorithmia.com
-// Submitted by Eli Perelman <eperelman@algorithmia.io>
-*.algorithmia.com
-!teams.algorithmia.com
-!test.algorithmia.com
 
 // Altervista: https://www.altervista.org
 // Submitted by Carlo Cannas <tech_staff@altervista.it>
@@ -11807,6 +11801,10 @@ ukco.me
 // submitted by Koen Van Isterdael <k.vanisterdael@fermax.be>
 mydobiss.com
 
+// FH Muenster : https://www.fh-muenster.de
+// Submitted by Robin Naundorf <r.naundorf@fh-muenster.de>
+fh-muenster.io
+
 // Filegear Inc. : https://www.filegear.com
 // Submitted by Jason Zhu <jason@owtware.com>
 filegear.me
@@ -11877,6 +11875,7 @@ usercontent.jp
 gentapps.com
 gentlentapis.com
 lab.ms
+cdn-edges.net
 
 // GitHub, Inc.
 // Submitted by Patrick Toomey <security@github.com>
@@ -11936,9 +11935,10 @@ pagespeedmobilizer.com
 publishproxy.com
 withgoogle.com
 withyoutube.com
-cloudfunctions.net
+*.gateway.dev
 cloud.goog
 translate.goog
+cloudfunctions.net
 
 blogspot.ae
 blogspot.al
@@ -12451,11 +12451,17 @@ eu.meteorapp.com
 co.pl
 
 // Microsoft Corporation : http://microsoft.com
-// Submitted by Mostafa Elzeiny <moelzein@microsoft.com>
+// Submitted by Mitch Webster <miwebst@microsoft.com>
 *.azurecontainer.io
 azurewebsites.net
 azure-mobile.net
 cloudapp.net
+azurestaticapps.net
+centralus.azurestaticapps.net
+eastasia.azurestaticapps.net
+eastus2.azurestaticapps.net
+westeurope.azurestaticapps.net
+westus2.azurestaticapps.net
 
 // minion.systems : http://minion.systems
 // Submitted by Robert Böttinger <r@minion.systems>
@@ -12889,6 +12895,10 @@ byen.site
 // pubtls.org: https://www.pubtls.org
 // Submitted by Kor Nielsen <kor@pubtls.org>
 pubtls.org
+
+// QOTO, Org.
+// Submitted by Jeffrey Phillips Freeman <jeffrey.freeman@qoto.org>
+qoto.io
 
 // Qualifio : https://qualifio.com/
 // Submitted by Xavier De Cock <xdecock@gmail.com>

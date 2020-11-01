@@ -10,8 +10,8 @@
 #include <codecvt>
 #include <memory>
 #include <idn2.h>
-#include <tsl/robin_set.h>
 
+#include "robin_hood.h"
 #include "public_suffix_list.h"
 
 
@@ -262,12 +262,12 @@ class DomainExtractor {
             return true;
         }
 
-        tsl::robin_set<std::string> known_tlds;
-        tsl::robin_set<std::string> blacklisted_tlds;
-        tsl::robin_set<std::string> wildcard_tlds;
-        tsl::robin_set<std::string_view> known_tlds_views;
-        tsl::robin_set<std::string_view> blacklisted_tlds_views;
-        tsl::robin_set<std::string_view> wildcard_tlds_views;
+        robin_hood::unordered_set<std::string> known_tlds;
+        robin_hood::unordered_set<std::string> blacklisted_tlds;
+        robin_hood::unordered_set<std::string> wildcard_tlds;
+        robin_hood::unordered_set<std::string_view> known_tlds_views;
+        robin_hood::unordered_set<std::string_view> blacklisted_tlds_views;
+        robin_hood::unordered_set<std::string_view> wildcard_tlds_views;
 };
 
 
@@ -326,7 +326,7 @@ static PyObject * DomainExtractor_extract(
     DomainExtractorObject * self,
     PyObject * arg
 ) {
-    const char * input = PyUnicode_AsUTF8(arg);
+    std::string input(PyUnicode_AsUTF8(arg));
 
     try {
         auto extracted_domain = self->domain_extractor->extract(input);
@@ -382,7 +382,7 @@ static PyObject * DomainExtractor_extract_from_url(
     DomainExtractorObject * self,
     PyObject * arg
 ) {
-    const char * input = PyUnicode_AsUTF8(arg);
+    std::string input(PyUnicode_AsUTF8(arg));
     std::string_view url(input);
 
     std::size_t scheme_separator_position = url.find("//");
@@ -463,7 +463,7 @@ static PyObject * DomainExtractor_is_valid_domain(
     DomainExtractorObject * self,
     PyObject * arg
 ) {
-    const char * input = PyUnicode_AsUTF8(arg);
+    std::string input(PyUnicode_AsUTF8(arg));
 
     auto valid_domain = self->domain_extractor->is_valid_domain(std::string(input));
     if (valid_domain == true) {
