@@ -5,7 +5,7 @@ import glob
 
 setuptools.setup(
     name='PyDomainExtractor',
-    version='0.8.5',
+    version='0.9.0',
     author='Gal Ben David',
     author_email='gal@intsights.com',
     url='https://github.com/Intsights/PyDomainExtractor',
@@ -29,13 +29,15 @@ setuptools.setup(
     install_requires=[],
     package_data={},
     include_package_data=True,
+    packages=setuptools.find_packages(),
+    ext_package='pydomainextractor',
     ext_modules=[
         setuptools.Extension(
-            name='pydomainextractor',
+            name='extractor',
             sources=glob.glob(
                 pathname=os.path.join(
                     'src',
-                    'pydomainextractor.cpp',
+                    'extractor.cpp',
                 ),
             ),
             language='c++',

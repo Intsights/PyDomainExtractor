@@ -560,9 +560,9 @@ static PyTypeObject DomainExtractorType = {
 };
 
 
-static struct PyModuleDef pydomainextractor_definition = {
+static struct PyModuleDef extractor_definition = {
     PyModuleDef_HEAD_INIT,
-    "pydomainextractor",
+    "extractor",
     "Extracting domain strings into their parts",
     -1,
     NULL,
@@ -570,13 +570,13 @@ static struct PyModuleDef pydomainextractor_definition = {
 
 
 PyMODINIT_FUNC
-PyInit_pydomainextractor(void) {
+PyInit_extractor(void) {
     PyObject *m;
     if (PyType_Ready(&DomainExtractorType) < 0) {
         return NULL;
     }
 
-    m = PyModule_Create(&pydomainextractor_definition);
+    m = PyModule_Create(&extractor_definition);
     if (m == NULL) {
         return NULL;
     }
