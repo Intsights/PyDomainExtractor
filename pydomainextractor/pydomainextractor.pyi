@@ -10,12 +10,12 @@ class DomainExtractor:
     def extract(
         self,
         domain: str,
-    ) -> typing.dict[str, str]: ...
+    ) -> typing.Dict[str, str]: ...
 
     def extract_from_url(
         self,
         url: str,
-    ) -> typing.dict[str, str]: ...
+    ) -> typing.Dict[str, str]: ...
 
     def is_valid_domain(
         self,
