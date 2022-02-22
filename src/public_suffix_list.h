@@ -870,6 +870,7 @@ gov.cx
 
 // cy : http://www.nic.cy/
 // Submitted by registry Panayiotou Fotia <cydns@ucy.ac.cy>
+// namespace policies URL https://www.nic.cy/portal//sites/default/files/symfonia_gia_eggrafi.pdf
 cy
 ac.cy
 biz.cy
@@ -877,10 +878,9 @@ com.cy
 ekloges.cy
 gov.cy
 ltd.cy
-name.cy
+mil.cy
 net.cy
 org.cy
-parliament.cy
 press.cy
 pro.cy
 tm.cy
@@ -7136,7 +7136,7 @@ org.zw
 
 // newGTLDs
 
-// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2021-12-30T15:13:57Z
+// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2022-02-18T15:13:38Z
 // This list is auto-generated, don't edit it manually.
 // aaa : 2015-02-26 American Automobile Association, Inc.
 aaa
@@ -7561,9 +7561,6 @@ brother
 // brussels : 2014-02-06 DNS.be vzw
 brussels
 
-// budapest : 2013-11-21 Minds + Machines Group Limited
-budapest
-
 // bugatti : 2015-07-23 Bugatti International SA
 bugatti
 
@@ -7600,7 +7597,7 @@ call
 // calvinklein : 2015-07-30 PVH gTLD Holdings LLC
 calvinklein
 
-// cam : 2016-04-21 AC Webconnecting Holding B.V.
+// cam : 2016-04-21 Cam Connecting SARL
 cam
 
 // camera : 2013-08-27 Binky Moon, LLC
@@ -7872,9 +7869,6 @@ cruise
 
 // cruises : 2013-12-05 Binky Moon, LLC
 cruises
-
-// csc : 2014-09-25 Alliance-One Services, Inc.
-csc
 
 // cuisinella : 2014-04-03 SCHMIDT GROUPE S.A.S.
 cuisinella
@@ -10816,6 +10810,10 @@ myasustor.com
 // Submitted by Sam Smyth <devloop@atlassian.com>
 cdn.prod.atlassian-dev.net
 
+// Authentick UG (haftungsbeschränkt) : https://authentick.net
+// Submitted by Lukas Reschke <lukas@authentick.net>
+translated.page
+
 // AVM : https://avm.de
 // Submitted by Andreas Weise <a.weise@avm.de>
 myfritz.net
@@ -10868,6 +10866,10 @@ supersale.jp
 theshop.jp
 shopselect.net
 base.shop
+
+// Beget Ltd
+// Submitted by Lev Nekrasov <lnekrasov@beget.com>
+*.beget.app
 
 // BetaInABox
 // Submitted by Adrian <adrian@betainabox.com>
@@ -11244,6 +11246,11 @@ dedyn.io
 // Submitted by Didi Hermawan <mail@diher.solutions>
 *.rss.my.id
 *.diher.solutions
+
+// Discord Inc : https://discord.com
+// Submitted by Sahn Lam <slam@discordapp.com>
+discordsays.com
+discordsez.com
 
 // DNS Africa Ltd https://dns.business
 // Submitted by Calvin Browne <calvin@dns.business>
@@ -11969,9 +11976,20 @@ futuremailing.at
 *.kunden.ortsinfo.at
 *.statics.cloud
 
-// GDS : https://www.gov.uk/service-manual/operations/operating-servicegovuk-subdomains
-// Submitted by David Illsley <david.illsley@digital.cabinet-office.gov.uk>
+// GDS : https://www.gov.uk/service-manual/technology/managing-domain-names
+// Submitted by Stephen Ford <hostmaster@digital.cabinet-office.gov.uk>
+independent-commission.uk
+independent-inquest.uk
+independent-inquiry.uk
+independent-panel.uk
+independent-review.uk
+public-inquiry.uk
+royal-commission.uk
 service.gov.uk
+
+// CDDO : https://www.gov.uk/guidance/get-an-api-domain-on-govuk
+// Submitted by Jamie Tanna <jamie.tanna@digital.cabinet-office.gov.uk>
+api.gov.uk
 
 // Gehirn Inc. : https://www.gehirn.co.jp/
 // Submitted by Kohei YOSHIDA <tech@gehirn.co.jp>
@@ -12441,6 +12459,10 @@ js.org
 // Submitted by Wouter Bakker <hostmaster@kaashosting.nl>
 kaas.gg
 khplay.nl
+
+// Kapsi : https://kapsi.fi
+// Submitted by Tomi Juntunen <erani@kapsi.fi>
+kapsi.fi
 
 // Keyweb AG : https://www.keyweb.de
 // Submitted by Martin Dannehl <postmaster@keymachine.de>
@@ -13050,6 +13072,10 @@ pleskns.com
 // Port53 : https://port53.io/
 // Submitted by Maximilian Schieder <maxi@zeug.co>
 dyn53.io
+
+// Porter : https://porter.run/
+// Submitted by Rudraksh MK <rudi@porter.run>
+onporter.run
 
 // Positive Codes Technology Company : http://co.bn/faq.html
 // Submitted by Zulfais <pc@co.bn>
@@ -13694,6 +13720,10 @@ me.vu
 // V.UA Domain Administrator : https://domain.v.ua/
 // Submitted by Serhii Rostilo <sergey@rostilo.kiev.ua>
 v.ua
+
+// Vultr Objects : https://www.vultr.com/products/object-storage/
+// Submitted by Niels Maumenee <storage@vultr.com>
+*.vultrobjects.com
 
 // Waffle Computer Inc., Ltd. : https://docs.waffleinfo.com
 // Submitted by Masayuki Note <masa@blade.wafflecell.com>
