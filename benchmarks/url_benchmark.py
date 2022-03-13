@@ -71,9 +71,9 @@ def main():
 
     urls = urls * 10
 
-    benchmark_tldextract(urls)
-    benchmark_publicsuffix2(urls)
-    benchmark_tld(urls)
+    # benchmark_tldextract(urls)
+    # benchmark_publicsuffix2(urls)
+    # benchmark_tld(urls)
     benchmark_pydomainextractor(urls)
 
 

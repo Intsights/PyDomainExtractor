@@ -1,0 +1,50 @@
+[package]
+name = "pydomainextractor"
+version = "0.11.0"
+authors = ["Gal Ben David <gal@intsights.com>"]
+edition = "2021"
+description = "A blazingly fast domain extraction library written in Rust"
+repository = "https://github.com/intsights/pydomainextractor"
+homepage = "https://github.com/intsights/pydomainextractor"
+license = "MIT"
+keywords = [
+    "domain",
+    "extraction",
+    "tld",
+    "suffix",
+    "psl",
+    "rust",
+    "pyo3",
+]
+
+[package.metadata.maturin]
+requires-python = ">=3.7"
+classifier = [
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Rust",
+]
+
+[lib]
+name = "pydomainextractor"
+crate-type = ["cdylib"]
+
+[dependencies]
+ahash = "0.7"
+idna = "0.2"
+memchr = "2"
+once_cell = "1"
+
+[dependencies.pyo3]
+version = "0.16.1"
+features = ["extension-module"]
+
+[profile.release]
+lto = true
+panic = "abort"
