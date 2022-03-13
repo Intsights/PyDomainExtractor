@@ -1,13 +1,13 @@
 import typing
 
-from . import extractor
+from . import pydomainextractor
 
 
 class DomainExtractor:
     '''
-    PyDomainExtractor is a highly optimized Domain Name Extraction library written in C++
+    PyDomainExtractor is a highly optimized Domain Name Extraction library written in Rust
     '''
-    engine: typing.Optional[extractor.DomainExtractor] = None
+    engine: typing.Optional[pydomainextractor.DomainExtractor] = None
 
     def __new__(
         cls,
@@ -15,8 +15,8 @@ class DomainExtractor:
     ):
         if suffix_list_data is None:
             if DomainExtractor.engine is None:
-                DomainExtractor.engine = extractor.DomainExtractor()
+                DomainExtractor.engine = pydomainextractor.DomainExtractor()
 
             return DomainExtractor.engine
         else:
-            return extractor.DomainExtractor(suffix_list_data)
+            return pydomainextractor.DomainExtractor(suffix_list_data)
