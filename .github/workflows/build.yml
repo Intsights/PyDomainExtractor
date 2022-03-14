@@ -1,12 +1,31 @@
 name: Build
 on: [push, pull_request]
 jobs:
-  build:
+  lint:
     if: github.event_name == 'push' && !startsWith(github.event.ref, 'refs/tags')
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install latest rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          components: clippy
+      - name: Lint with clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --all-targets --all-features
+  test:
+    runs-on: ${{ matrix.os }}
+    needs: lint
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10', 'pypy3']
+        python-version: ['3.7', '3.8', '3.9', '3.10']
+        os: [ubuntu-latest , macos-latest, windows-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -14,9 +33,17 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Ubuntu packages
-        run: >-
-          sudo apt install libidn2-dev;
+      - name: Run image
+        uses: abatilo/actions-poetry@v2.0.0
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - name: Install dependencies
+        run: poetry install
+      - name: Build Python package
+        run: poetry run maturin develop
       - name: Test
-        run: >-
-          python setup.py test
+        run: poetry run pytest -Werror tests
