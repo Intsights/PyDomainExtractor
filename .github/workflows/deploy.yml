@@ -1,20 +1,28 @@
 name: Deploy
 on:
   release:
-    types: [released]
+    types:
+      - released
 jobs:
   deploy:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10']
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version:
+          - '3.7'
+          - '3.8'
+          - '3.9'
+          - '3.10'
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install Rust
@@ -24,22 +32,9 @@ jobs:
           toolchain: stable
           override: true
       - name: Publish Package
-        if: matrix.os != 'windows-latest'
         uses: messense/maturin-action@v1
         with:
-          maturin-version: latest
           command: publish
-          manylinux: 2014
-          args: --username=__token__ --no-sdist --interpreter=python${{ matrix.python-version }}
-        env:
-          MATURIN_PASSWORD: ${{ secrets.pypi_password }}
-      - name: Publish Package
-        if: matrix.os == 'windows-latest'
-        uses: messense/maturin-action@v1
-        with:
-          maturin-version: latest
-          command: publish
-          manylinux: 2014
-          args: --username=__token__ --no-sdist --interpreter=python
+          args: --username=__token__ --no-sdist --interpreter=python${{ !startsWith(matrix.os, 'windows') && matrix.python-version || '' }}
         env:
           MATURIN_PASSWORD: ${{ secrets.pypi_password }}
