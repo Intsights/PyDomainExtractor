@@ -35,6 +35,6 @@ jobs:
         uses: messense/maturin-action@v1
         with:
           command: publish
-          args: --username=__token__ ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.7' && '--no-sdist' || '' }} --interpreter=python${{ !startsWith(matrix.os, 'windows') && matrix.python-version || '' }}
+          args: --username=__token__ ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.7' && '' || '--no-sdist' }} --interpreter=python${{ !startsWith(matrix.os, 'windows') && matrix.python-version || '' }}
         env:
           MATURIN_PASSWORD: ${{ secrets.pypi_password }}
