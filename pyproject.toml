@@ -1,18 +1,19 @@
 [build-system]
-requires = ["maturin>=0.11,<0.12"]
+requires = ["maturin>=0.12,<0.13"]
 build-backend = "maturin"
 
 [tool.maturin]
 sdist-include = [
-    "src/*",
     "Cargo.toml",
     "pydomainextractor/*.py",
-    "pydomainextractor/*.pyi"
+    "pydomainextractor/*.pyi",
+    "pyproject.toml",
+    "src/*",
 ]
 
 [tool.poetry]
 name = "pydomainextractor"
-version = "0.11.0"
+version = "0.11.1"
 authors = ["Gal Ben David <gal@intsights.com>"]
 description = "A blazingly fast domain extraction library written in Rust"
 readme = "README.md"

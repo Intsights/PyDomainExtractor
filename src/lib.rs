@@ -3,7 +3,7 @@ use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 use pyo3::types::PyString;
 use std::ptr;
-use once_cell::sync::OnceCell;
+use pyo3::once_cell::GILOnceCell;
 
 #[derive(Default)]
 struct Suffix {
@@ -17,7 +17,7 @@ static mut SUFFIX_STRING: *mut pyo3::ffi::PyObject = ptr::null_mut();
 static mut DOMAIN_STRING: *mut pyo3::ffi::PyObject = ptr::null_mut();
 static mut SUBDOMAIN_STRING: *mut pyo3::ffi::PyObject = ptr::null_mut();
 static PUBLIC_SUFFIX_LIST_DATA: &str = include_str!("public_suffix_list.dat");
-static mut TEMP_DOMAIN_STRING: OnceCell<String> = OnceCell::new();
+static mut TEMP_DOMAIN_STRING: GILOnceCell<String> = GILOnceCell::new();
 
 
 #[pyclass]
@@ -363,7 +363,7 @@ fn parse_suffix_list(
 
 #[pymodule]
 fn pydomainextractor(
-    _py: Python,
+    py: Python,
     m: &PyModule,
 ) -> PyResult<()> {
     unsafe {
@@ -380,7 +380,7 @@ fn pydomainextractor(
             "subdomain".as_ptr() as *const i8,
             "subdomain".len() as isize,
         );
-        TEMP_DOMAIN_STRING.get_or_init(|| String::with_capacity(1024));
+        TEMP_DOMAIN_STRING.set(py, String::with_capacity(1024)).unwrap();
     }
 
     m.add_class::<DomainExtractor>()?;
