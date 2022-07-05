@@ -129,7 +129,7 @@ import pydomainextractor
 # Loads the current supplied version of PublicSuffixList from the repository. Does not download any data.
 domain_extractor = pydomainextractor.DomainExtractor()
 
-domain_extractor.extract('http://google.com/')
+domain_extractor.extract_from_url('http://google.com/')
 >>> {
 >>>     'subdomain': '',
 >>>     'domain': 'google',
