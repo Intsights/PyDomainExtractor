@@ -1,9 +1,10 @@
 use ahash::{AHashMap, AHashSet};
 use pyo3::exceptions::PyValueError;
+use pyo3::intern;
 use pyo3::prelude::*;
 use pyo3::types::PyString;
-use std::ptr;
-use pyo3::once_cell::GILOnceCell;
+
+type DomainString = arraystring::ArrayString<typenum::U255>;
 
 #[derive(Default)]
 struct Suffix {
@@ -12,13 +13,7 @@ struct Suffix {
     sub_blacklist: AHashSet<String>,
 }
 
-static mut EMPTY_STRING: *mut pyo3::ffi::PyObject = ptr::null_mut();
-static mut SUFFIX_STRING: *mut pyo3::ffi::PyObject = ptr::null_mut();
-static mut DOMAIN_STRING: *mut pyo3::ffi::PyObject = ptr::null_mut();
-static mut SUBDOMAIN_STRING: *mut pyo3::ffi::PyObject = ptr::null_mut();
 static PUBLIC_SUFFIX_LIST_DATA: &str = include_str!("public_suffix_list.dat");
-static mut TEMP_DOMAIN_STRING: GILOnceCell<String> = GILOnceCell::new();
-
 
 #[pyclass]
 struct DomainExtractor {
@@ -31,21 +26,21 @@ impl DomainExtractor {
     #[new]
     fn new(
         suffix_list: Option<&str>,
-    ) -> PyResult<Self> {
+    ) -> Self {
         let (suffixes, tld_list) = if let Some(suffix_list) = suffix_list {
             parse_suffix_list(suffix_list)
         } else {
             parse_suffix_list(PUBLIC_SUFFIX_LIST_DATA)
         };
 
-        Ok(DomainExtractor { suffixes, tld_list })
+        DomainExtractor { suffixes, tld_list }
     }
 
     fn parse_domain_parts<'a>(
         &self,
         domain: &'a str,
-    ) -> Result<(&'a str, &'a str, &'a str), PyErr> {
-        let mut suffix_part: &str = "";
+    ) -> PyResult<(&'a str, &'a str, &'a str)> {
+        let mut suffix_part = "";
         let mut current_suffixes = &self.suffixes;
         let mut last_dot_index = domain.len();
         let mut in_wildcard_tld = false;
@@ -126,29 +121,26 @@ impl DomainExtractor {
 
     fn extract(
         &self,
+        py: Python,
         domain: &PyString,
-    ) -> PyResult<*mut pyo3::ffi::PyObject> {
+    ) -> PyResult<PyObject> {
         if domain.len().unwrap() > 255 {
             return Err(PyValueError::new_err("Invalid domain detected"));
         }
 
-        let domain_string = unsafe {
-            let temp_domain_string = TEMP_DOMAIN_STRING.get_mut().unwrap_unchecked();
-            temp_domain_string.clear();
-            temp_domain_string.push_str(domain.to_str().unwrap());
-            temp_domain_string.make_ascii_lowercase();
-
-            temp_domain_string
+        let mut domain_string = unsafe {
+            DomainString::from_str_unchecked(domain.to_string_lossy().as_ref())
         };
+        domain_string.make_ascii_lowercase();
 
-        let (suffix_part, domain_part, subdomain_part) = self.parse_domain_parts(domain_string)?;
+        let (suffix_part, domain_part, subdomain_part) = self.parse_domain_parts(domain_string.as_str())?;
 
         unsafe {
             let dict = pyo3::ffi::PyDict_New();
             for (fraction_key, fraction) in [
-                (SUFFIX_STRING, suffix_part),
-                (DOMAIN_STRING, domain_part),
-                (SUBDOMAIN_STRING, subdomain_part),
+                (intern!(py, "suffix").into_ptr(), suffix_part),
+                (intern!(py, "domain").into_ptr(), domain_part),
+                (intern!(py, "subdomain").into_ptr(), subdomain_part),
             ] {
                 if !fraction.is_empty() {
                     let substr = pyo3::ffi::PyUnicode_FromStringAndSize(
@@ -166,12 +158,12 @@ impl DomainExtractor {
                     pyo3::ffi::PyDict_SetItem(
                         dict,
                         fraction_key,
-                        EMPTY_STRING,
+                        intern!(py, "").into_ptr(),
                     );
                 }
             }
 
-            Ok(dict)
+            Ok(pyo3::PyObject::from_owned_ptr(py, dict))
         }
     }
 
@@ -184,12 +176,8 @@ impl DomainExtractor {
             return false;
         }
 
-        let domain_string = unsafe {
-            let temp_domain_string = TEMP_DOMAIN_STRING.get_mut().unwrap_unchecked();
-            temp_domain_string.clear();
-            temp_domain_string.push_str(domain.to_str().unwrap());
-
-            temp_domain_string
+        let mut domain_string = unsafe {
+            DomainString::from_str_unchecked(domain.to_string_lossy().as_ref())
         };
 
         for fraction in domain_string.split('.') {
@@ -208,15 +196,15 @@ impl DomainExtractor {
         }
 
         domain_string.make_ascii_lowercase();
-        if let Ok((suffix_part, domain_part, _subdomain_part)) = self.parse_domain_parts(domain_string) {
+        if let Ok((suffix_part, domain_part, _subdomain_part)) = self.parse_domain_parts(domain_string.as_str()) {
             if suffix_part.is_empty() || domain_part.is_empty() {
                 return false;
             }
 
-            if idna::domain_to_ascii(domain_string).is_err() {
+            if idna::domain_to_ascii(domain_string.as_str()).is_err() {
                 return false;
             }
-            if idna::domain_to_unicode(domain_string).1.is_err() {
+            if idna::domain_to_unicode(domain_string.as_str()).1.is_err() {
                 return false;
             }
 
@@ -234,8 +222,9 @@ impl DomainExtractor {
 
     fn extract_from_url(
         &self,
+        py: Python,
         url: &PyString,
-    ) -> PyResult<*mut pyo3::ffi::PyObject> {
+    ) -> PyResult<PyObject> {
         let mut url_str = url.to_str().unwrap();
 
         match memchr::memmem::find(url_str.as_bytes(), b"//") {
@@ -265,23 +254,19 @@ impl DomainExtractor {
             );
         }
 
-        let domain_string = unsafe {
-            let temp_domain_string = TEMP_DOMAIN_STRING.get_mut().unwrap_unchecked();
-            temp_domain_string.clear();
-            temp_domain_string.push_str(url_str);
-            temp_domain_string.make_ascii_lowercase();
-
-            temp_domain_string
+        let mut domain_string = unsafe {
+            DomainString::from_str_unchecked(url_str)
         };
+        domain_string.make_ascii_lowercase();
 
         let (suffix_part, domain_part, subdomain_part) = self.parse_domain_parts(domain_string.as_str())?;
 
         unsafe {
             let dict = pyo3::ffi::PyDict_New();
             for (fraction_key, fraction) in [
-                (SUFFIX_STRING, suffix_part),
-                (DOMAIN_STRING, domain_part),
-                (SUBDOMAIN_STRING, subdomain_part),
+                (intern!(py, "suffix").into_ptr(), suffix_part),
+                (intern!(py, "domain").into_ptr(), domain_part),
+                (intern!(py, "subdomain").into_ptr(), subdomain_part),
             ] {
                 if !fraction.is_empty() {
                     let substr = pyo3::ffi::PyUnicode_FromStringAndSize(
@@ -299,12 +284,12 @@ impl DomainExtractor {
                     pyo3::ffi::PyDict_SetItem(
                         dict,
                         fraction_key,
-                        EMPTY_STRING,
+                        intern!(py, "").into_ptr(),
                     );
                 }
             }
 
-            Ok(dict)
+            Ok(pyo3::PyObject::from_owned_ptr(py, dict))
         }
     }
 }
@@ -363,26 +348,9 @@ fn parse_suffix_list(
 
 #[pymodule]
 fn pydomainextractor(
-    py: Python,
+    _py: Python,
     m: &PyModule,
 ) -> PyResult<()> {
-    unsafe {
-        EMPTY_STRING = pyo3::ffi::PyUnicode_New(0, 127);
-        SUFFIX_STRING = pyo3::ffi::PyUnicode_FromStringAndSize(
-            "suffix".as_ptr() as *const i8,
-            "suffix".len() as isize,
-        );
-        DOMAIN_STRING = pyo3::ffi::PyUnicode_FromStringAndSize(
-            "domain".as_ptr() as *const i8,
-            "domain".len() as isize,
-        );
-        SUBDOMAIN_STRING = pyo3::ffi::PyUnicode_FromStringAndSize(
-            "subdomain".as_ptr() as *const i8,
-            "subdomain".len() as isize,
-        );
-        TEMP_DOMAIN_STRING.set(py, String::with_capacity(1024)).unwrap();
-    }
-
     m.add_class::<DomainExtractor>()?;
     Ok(())
 }
