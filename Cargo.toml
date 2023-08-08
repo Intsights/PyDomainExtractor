@@ -1,6 +1,6 @@
 [package]
 name = "pydomainextractor"
-version = "0.13.2"
+version = "0.13.3"
 authors = ["Gal Ben David <gal@intsights.com>"]
 edition = "2021"
 description = "A blazingly fast domain extraction library written in Rust"
