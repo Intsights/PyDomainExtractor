@@ -17,21 +17,6 @@ keywords = [
     "pyo3",
 ]
 
-[package.metadata.maturin]
-requires-python = ">=3.7"
-classifier = [
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: MacOS",
-    "Operating System :: Microsoft",
-    "Operating System :: POSIX :: Linux",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Rust",
-]
-
 [lib]
 name = "pydomainextractor"
 crate-type = ["cdylib"]
