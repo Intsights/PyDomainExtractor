@@ -2,7 +2,10 @@
 name = "pydomainextractor"
 version = "0.13.0"
 description = "A blazingly fast domain extraction library written in Rust"
-authors = ["Gal Ben David <gal@intsights.com>"]
+
+[project.authors]
+name = "Gal Ben David"
+email = "gal@intsights.com"
 
 [project.urls]
 repository = "https://github.com/intsights/pydomainextractor"
