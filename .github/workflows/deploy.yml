@@ -35,8 +35,8 @@ jobs:
       - name: Install Cross-compilers (macOS)
         if: matrix.os == 'macos-latest'
         run: |
-          brew install FiloSottile/musl-cross/musl-cross
-          brew install mingw-w64
+          rustup target add x86_64-unknown-linux-gnu
+          rustup target add aarch64-apple-darwin
       - name: Publish Package
         uses: PyO3/maturin-action@v1
         with:
