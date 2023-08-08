@@ -7,7 +7,7 @@ authors = [
   {name = "Gal Ben David"}
 ]
 requires-python = ">=3.7"
-license = "MIT"
+license = {file = "LICENSE"}
 classifiers = [
   "License :: OSI Approved :: MIT License",
   "Operating System :: MacOS",
