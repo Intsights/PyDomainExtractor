@@ -32,10 +32,32 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+      - name: Install Cross-compilers (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          rustup target add x86_64-apple-darwin
+          rustup target add aarch64-apple-darwin
       - name: Publish Package
         uses: PyO3/maturin-action@v1
         with:
           command: publish
           args: --username=__token__ ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.7' && '' || '--no-sdist' }} --interpreter=python${{ !startsWith(matrix.os, 'windows') && matrix.python-version || '' }}
+        env:
+          MATURIN_PASSWORD: ${{ secrets.pypi_password }}
+        if: matrix.os != 'macos-latest'
+      - name: Publish macOS (x86_64) Package
+        if: matrix.os == 'macos-latest'
+        uses: PyO3/maturin-action@v1
+        with:
+          command: publish
+          args: --username=__token__ --interpreter=python${{ matrix.python-version }} --target=x86_64-apple-darwin
+        env:
+          MATURIN_PASSWORD: ${{ secrets.pypi_password }}
+      - name: Publish macOS (arm64) Package
+        if: matrix.os == 'macos-latest'
+        uses: PyO3/maturin-action@v1
+        with:
+          command: publish
+          args: --username=__token__ --interpreter=python${{ matrix.python-version }} --target=aarch64-apple-darwin
         env:
           MATURIN_PASSWORD: ${{ secrets.pypi_password }}

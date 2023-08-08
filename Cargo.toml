@@ -1,6 +1,6 @@
 [package]
 name = "pydomainextractor"
-version = "0.12.0"
+version = "0.13.0"
 authors = ["Gal Ben David <gal@intsights.com>"]
 edition = "2021"
 description = "A blazingly fast domain extraction library written in Rust"
@@ -15,21 +15,6 @@ keywords = [
     "psl",
     "rust",
     "pyo3",
-]
-
-[package.metadata.maturin]
-requires-python = ">=3.7"
-classifier = [
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: MacOS",
-    "Operating System :: Microsoft",
-    "Operating System :: POSIX :: Linux",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Rust",
 ]
 
 [lib]
