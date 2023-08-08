@@ -2,10 +2,11 @@
 name = "pydomainextractor"
 version = "0.13.0"
 description = "A blazingly fast domain extraction library written in Rust"
-
-[project.authors]
-name = "Gal Ben David"
-email = "gal@intsights.com"
+authors = [
+  {email = "gal@intsights.com"},
+  {name = "Gal Ben David"}
+]
+requires-python = ">=3.7"
 
 [project.urls]
 repository = "https://github.com/intsights/pydomainextractor"
@@ -73,15 +74,6 @@ addopts = [
 testpaths = [
     "tests",
 ]
-
-[project.metadata]
-requires-python = ">=3.7"
-
-[project.release]
-requires-python = ">=3.7"
-
-[project.sdist]
-requires-python = ">=3.7"
 
 [project.classifiers]
 license = "License :: OSI Approved :: MIT License"
