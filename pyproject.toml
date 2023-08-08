@@ -7,6 +7,19 @@ authors = [
   {name = "Gal Ben David"}
 ]
 requires-python = ">=3.7"
+license = "MIT"
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Rust",
+]
 
 [project.urls]
 repository = "https://github.com/intsights/pydomainextractor"
@@ -73,20 +86,4 @@ addopts = [
 ]
 testpaths = [
     "tests",
-]
-
-[project.classifiers]
-license = "License :: OSI Approved :: MIT License"
-operating-system = [
-  "MacOS",
-  "Microsoft",
-  "POSIX :: Linux",
-]
-programming-language = [
-  "Python :: 3.7",
-  "Python :: 3.8",
-  "Python :: 3.9",
-  "Python :: 3.10",
-  "Python :: 3.11",
-  "Rust",
 ]
