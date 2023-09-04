@@ -653,6 +653,14 @@ class DomainExtractorExtractionTestCase(
                 'suffix': 'com',
             },
         )
+        self.assertEqual(
+            first=self.domain_extractor.extract_from_url('http://test.nu'),
+            second={
+                'subdomain': '',
+                'domain': 'test',
+                'suffix': 'nu',
+            },
+        )
 
     def test_is_valid_domain(
         self,
