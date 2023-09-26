@@ -349,6 +349,11 @@ class DomainExtractorExtractionTestCase(
         ):
             self.domain_extractor.extract_from_url('co.uk')
 
+        with self.assertRaises(
+            ValueError,
+        ):
+            self.domain_extractor.extract_from_url(f'http://{"domain" * 255}co.uk:3030/some/path')
+
         self.assertEqual(
             first=self.domain_extractor.extract_from_url('http://www.google.com'),
             second={
