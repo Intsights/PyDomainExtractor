@@ -1,0 +1,15 @@
+---
+info:
+  title: Pydomainextractor
+  description: A blazingly fast domain extraction library written in Rust
+  x-cortex-git:
+    github:
+      alias: intsightsorg
+      repository: Intsights/PyDomainExtractor
+  x-cortex-tag: pydomainextractor
+  x-cortex-type: service
+  x-cortex-domain-parents:
+  - tag: threatintel-rd
+openapi: 3.0.1
+servers:
+- url: "/"
