@@ -255,7 +255,7 @@ impl DomainExtractor {
         }
 
         if url_str.len() > 255 {
-            return Err(PyValueError::new_err("Invalid domain detected"));
+            return Err(PyValueError::new_err("url is invalid: too long"));
         }
         let mut domain_string = unsafe {
             DomainString::from_str_unchecked(url_str)
