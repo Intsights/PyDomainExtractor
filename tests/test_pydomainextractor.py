@@ -301,6 +301,14 @@ class DomainExtractorExtractionTestCase(
         ):
             self.domain_extractor.extract('com.')
 
+    def test_domain_too_long(
+        self,
+    ):
+        with self.assertRaises(
+            expected_exception=ValueError,
+        ):
+            self.domain_extractor.extract(f'{"very-long" * 255}.com')
+
     def test_extract_from_url(
         self,
     ):
@@ -348,6 +356,11 @@ class DomainExtractorExtractionTestCase(
             ValueError,
         ):
             self.domain_extractor.extract_from_url('co.uk')
+
+        with self.assertRaises(
+            ValueError,
+        ):
+            self.domain_extractor.extract_from_url(f'http://{"domain" * 255}co.uk:3030/some/path')
 
         self.assertEqual(
             first=self.domain_extractor.extract_from_url('http://www.google.com'),
