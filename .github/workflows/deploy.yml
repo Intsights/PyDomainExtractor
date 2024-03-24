@@ -10,11 +10,11 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - '3.7'
-          - '3.8'
-          - '3.9'
-          - '3.10'
-          - '3.11'
+          - "3.7"
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
         os:
           - ubuntu-latest
           - macos-latest
@@ -37,6 +37,7 @@ jobs:
         run: |
           rustup target add x86_64-apple-darwin
           rustup target add aarch64-apple-darwin
+          rustup target add aarch64-unknown-linux-gnu
       - name: Publish Package
         uses: PyO3/maturin-action@v1
         with:
@@ -59,5 +60,13 @@ jobs:
         with:
           command: publish
           args: --username=__token__ --interpreter=python${{ matrix.python-version }} --target=aarch64-apple-darwin --no-sdist
+        env:
+          MATURIN_PASSWORD: ${{ secrets.pypi_password }}
+      - name: Publish Linux (arm64) Package
+        if: matrix.os == 'ubuntu-latest'
+        uses: PyO3/maturin-action@v1
+        with:
+          command: publish
+          args: --username=__token__ --interpreter=python${{ matrix.python-version }} --target=aarch64-unknown-linux-gnu --no-sdist
         env:
           MATURIN_PASSWORD: ${{ secrets.pypi_password }}
