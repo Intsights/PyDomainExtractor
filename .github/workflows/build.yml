@@ -28,11 +28,11 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - '3.7'
-          - '3.8'
-          - '3.9'
-          - '3.10'
-          - '3.11'
+          - "3.7"
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
         os:
           - ubuntu-latest
           - macos-latest
@@ -58,3 +58,11 @@ jobs:
         run: poetry run maturin develop
       - name: Test
         run: poetry run pytest -Werror tests
+      - name: Publish Linux (arm64) Package
+        if: matrix.os == 'ubuntu-latest'
+        uses: PyO3/maturin-action@v1
+        with:
+          command: build
+          args: --interpreter=python3.11 --target=aarch64-unknown-linux-gnu
+        env:
+          MATURIN_PASSWORD: ${{ secrets.pypi_password }}
