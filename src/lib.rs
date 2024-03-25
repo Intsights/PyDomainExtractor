@@ -1,4 +1,5 @@
 use ahash::{AHashMap, AHashSet};
+use libc::c_char;
 use pyo3::exceptions::PyValueError;
 use pyo3::intern;
 use pyo3::prelude::*;
@@ -24,9 +25,7 @@ struct DomainExtractor {
 #[pymethods]
 impl DomainExtractor {
     #[new]
-    fn new(
-        suffix_list: Option<&str>,
-    ) -> Self {
+    fn new(suffix_list: Option<&str>) -> Self {
         let (suffixes, tld_list) = if let Some(suffix_list) = suffix_list {
             parse_suffix_list(suffix_list)
         } else {
@@ -36,10 +35,7 @@ impl DomainExtractor {
         DomainExtractor { suffixes, tld_list }
     }
 
-    fn parse_domain_parts<'a>(
-        &self,
-        domain: &'a str,
-    ) -> PyResult<(&'a str, &'a str, &'a str)> {
+    fn parse_domain_parts<'a>(&self, domain: &'a str) -> PyResult<(&'a str, &'a str, &'a str)> {
         let mut suffix_part = "";
         let mut current_suffixes = &self.suffixes;
         let mut last_dot_index = domain.len();
@@ -53,7 +49,11 @@ impl DomainExtractor {
             }
 
             if in_wildcard_tld {
-                if last_suffix.unwrap().sub_blacklist.contains(current_fraction) {
+                if last_suffix
+                    .unwrap()
+                    .sub_blacklist
+                    .contains(current_fraction)
+                {
                     let leftover_part = &domain[0..dot_index];
 
                     return Ok((suffix_part, current_fraction, leftover_part));
@@ -107,7 +107,11 @@ impl DomainExtractor {
 
         let current_fraction = &domain[0..last_dot_index];
         if in_wildcard_tld {
-            if last_suffix.unwrap().sub_blacklist.contains(current_fraction) {
+            if last_suffix
+                .unwrap()
+                .sub_blacklist
+                .contains(current_fraction)
+            {
                 Ok((suffix_part, current_fraction, ""))
             } else {
                 Ok((domain, "", ""))
@@ -119,21 +123,17 @@ impl DomainExtractor {
         }
     }
 
-    fn extract(
-        &self,
-        py: Python,
-        domain: &PyString,
-    ) -> PyResult<PyObject> {
+    fn extract(&self, py: Python, domain: &PyString) -> PyResult<PyObject> {
         if domain.len().unwrap() > 255 {
             return Err(PyValueError::new_err("Invalid domain detected"));
         }
 
-        let mut domain_string = unsafe {
-            DomainString::from_str_unchecked(domain.to_string_lossy().as_ref())
-        };
+        let mut domain_string =
+            unsafe { DomainString::from_str_unchecked(domain.to_string_lossy().as_ref()) };
         domain_string.make_ascii_lowercase();
 
-        let (suffix_part, domain_part, subdomain_part) = self.parse_domain_parts(domain_string.as_str())?;
+        let (suffix_part, domain_part, subdomain_part) =
+            self.parse_domain_parts(domain_string.as_str())?;
 
         unsafe {
             let dict = pyo3::ffi::PyDict_New();
@@ -144,22 +144,14 @@ impl DomainExtractor {
             ] {
                 if !fraction.is_empty() {
                     let substr = pyo3::ffi::PyUnicode_FromStringAndSize(
-                        fraction.as_ptr() as *const i8,
+                        fraction.as_ptr() as *const c_char,
                         fraction.len() as isize,
                     );
 
-                    pyo3::ffi::PyDict_SetItem(
-                        dict,
-                        fraction_key,
-                        substr,
-                    );
+                    pyo3::ffi::PyDict_SetItem(dict, fraction_key, substr);
                     pyo3::ffi::Py_DECREF(substr);
                 } else {
-                    pyo3::ffi::PyDict_SetItem(
-                        dict,
-                        fraction_key,
-                        intern!(py, "").into_ptr(),
-                    );
+                    pyo3::ffi::PyDict_SetItem(dict, fraction_key, intern!(py, "").into_ptr());
                 }
             }
 
@@ -167,18 +159,14 @@ impl DomainExtractor {
         }
     }
 
-    fn is_valid_domain(
-        &self,
-        domain: &PyString,
-    ) -> bool {
+    fn is_valid_domain(&self, domain: &PyString) -> bool {
         let domain_len = domain.len().unwrap();
         if domain_len == 0 || domain_len > 255 {
             return false;
         }
 
-        let mut domain_string = unsafe {
-            DomainString::from_str_unchecked(domain.to_string_lossy().as_ref())
-        };
+        let mut domain_string =
+            unsafe { DomainString::from_str_unchecked(domain.to_string_lossy().as_ref()) };
 
         for fraction in domain_string.split('.') {
             if fraction.len() > 63 || fraction.is_empty() {
@@ -196,7 +184,9 @@ impl DomainExtractor {
         }
 
         domain_string.make_ascii_lowercase();
-        if let Ok((suffix_part, domain_part, _subdomain_part)) = self.parse_domain_parts(domain_string.as_str()) {
+        if let Ok((suffix_part, domain_part, _subdomain_part)) =
+            self.parse_domain_parts(domain_string.as_str())
+        {
             if suffix_part.is_empty() || domain_part.is_empty() {
                 return false;
             }
@@ -214,26 +204,18 @@ impl DomainExtractor {
         }
     }
 
-    fn get_tld_list(
-        &self,
-    ) -> Vec<String> {
+    fn get_tld_list(&self) -> Vec<String> {
         self.tld_list.clone()
     }
 
-    fn extract_from_url(
-        &self,
-        py: Python,
-        url: &PyString,
-    ) -> PyResult<PyObject> {
+    fn extract_from_url(&self, py: Python, url: &PyString) -> PyResult<PyObject> {
         let mut url_str = url.to_str().unwrap();
 
         match memchr::memmem::find(url_str.as_bytes(), b"//") {
             Some(scheme_separator_position) => {
                 url_str = &url_str[scheme_separator_position + 2..];
-            },
-            None => return Err(
-                PyValueError::new_err("url is invalid: no scheme")
-            ),
+            }
+            None => return Err(PyValueError::new_err("url is invalid: no scheme")),
         };
 
         if let Some(path_separator) = memchr::memchr(b'/', url_str.as_bytes()) {
@@ -249,20 +231,17 @@ impl DomainExtractor {
         };
 
         if url_str.is_empty() {
-            return Err(
-                PyValueError::new_err("url does not contain a domain")
-            );
+            return Err(PyValueError::new_err("url does not contain a domain"));
         }
 
         if url_str.len() > 255 {
             return Err(PyValueError::new_err("url is invalid: too long"));
         }
-        let mut domain_string = unsafe {
-            DomainString::from_str_unchecked(url_str)
-        };
+        let mut domain_string = unsafe { DomainString::from_str_unchecked(url_str) };
         domain_string.make_ascii_lowercase();
 
-        let (suffix_part, domain_part, subdomain_part) = self.parse_domain_parts(domain_string.as_str())?;
+        let (suffix_part, domain_part, subdomain_part) =
+            self.parse_domain_parts(domain_string.as_str())?;
 
         unsafe {
             let dict = pyo3::ffi::PyDict_New();
@@ -273,22 +252,14 @@ impl DomainExtractor {
             ] {
                 if !fraction.is_empty() {
                     let substr = pyo3::ffi::PyUnicode_FromStringAndSize(
-                        fraction.as_ptr() as *const i8,
+                        fraction.as_ptr() as *const c_char,
                         fraction.len() as isize,
                     );
 
-                    pyo3::ffi::PyDict_SetItem(
-                        dict,
-                        fraction_key,
-                        substr,
-                    );
+                    pyo3::ffi::PyDict_SetItem(dict, fraction_key, substr);
                     pyo3::ffi::Py_DECREF(substr);
                 } else {
-                    pyo3::ffi::PyDict_SetItem(
-                        dict,
-                        fraction_key,
-                        intern!(py, "").into_ptr(),
-                    );
+                    pyo3::ffi::PyDict_SetItem(dict, fraction_key, intern!(py, "").into_ptr());
                 }
             }
 
@@ -297,15 +268,11 @@ impl DomainExtractor {
     }
 }
 
-fn parse_suffix_list(
-    suffixes_list: &str,
-) -> (AHashMap<String, Suffix>, Vec<String>) {
+fn parse_suffix_list(suffixes_list: &str) -> (AHashMap<String, Suffix>, Vec<String>) {
     let mut suffixes = AHashMap::new();
     let mut tld_list = Vec::new();
 
-    for line in suffixes_list.lines().map(
-        |line| line.to_ascii_lowercase()
-    ) {
+    for line in suffixes_list.lines().map(|line| line.to_ascii_lowercase()) {
         if line.starts_with("//") || line.is_empty() {
             continue;
         }
@@ -317,30 +284,31 @@ fn parse_suffix_list(
         for tld in tlds {
             tld_list.push(tld.clone());
 
-            let fractions: Vec<String> = tld.rsplit('.').map(
-                |s| s.to_string()
-            ).collect();
-            let mut current_suffix = suffixes.entry(fractions.first().unwrap().to_owned()).or_insert(
-                Suffix {
+            let fractions: Vec<String> = tld.rsplit('.').map(|s| s.to_string()).collect();
+            let mut current_suffix = suffixes
+                .entry(fractions.first().unwrap().to_owned())
+                .or_insert(Suffix {
                     sub_suffixes: AHashMap::new(),
                     is_wildcard: false,
                     sub_blacklist: AHashSet::new(),
-                }
-            );
+                });
 
             for fraction in fractions[1..].iter() {
                 if fraction.starts_with('!') {
-                    current_suffix.sub_blacklist.insert(fraction.strip_prefix('!').unwrap().to_string());
+                    current_suffix
+                        .sub_blacklist
+                        .insert(fraction.strip_prefix('!').unwrap().to_string());
                 } else if fraction == "*" {
                     current_suffix.is_wildcard = true;
                 } else {
-                    current_suffix = current_suffix.sub_suffixes.entry(fraction.clone()).or_insert(
-                        Suffix {
+                    current_suffix = current_suffix
+                        .sub_suffixes
+                        .entry(fraction.clone())
+                        .or_insert(Suffix {
                             sub_suffixes: AHashMap::new(),
                             is_wildcard: false,
                             sub_blacklist: AHashSet::new(),
-                        }
-                    );
+                        });
                 }
             }
         }
@@ -350,10 +318,7 @@ fn parse_suffix_list(
 }
 
 #[pymodule]
-fn pydomainextractor(
-    _py: Python,
-    m: &PyModule,
-) -> PyResult<()> {
+fn pydomainextractor(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<DomainExtractor>()?;
     Ok(())
 }
