@@ -1,6 +1,6 @@
 [package]
 name = "pydomainextractor"
-version = "0.13.8"
+version = "0.13.9"
 authors = ["Viktor Vilskyi <viktor_vilskyi@rapid7.com>"]
 edition = "2021"
 repository = "https://github.com/intsights/pydomainextractor"
