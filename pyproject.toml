@@ -1,10 +1,10 @@
 [project]
 name = "pydomainextractor"
-version = "0.13.7"
+version = "0.13.8"
 description = "A blazingly fast domain extraction library written in Rust"
 authors = [
-  {email = "gal@intsights.com"},
-  {name = "Gal Ben David"}
+  {email = "viktor_vilskyi@rapid7.com"},
+  {name = "Viktor Vilskyi"}
 ]
 requires-python = ">=3.7"
 license = {file = "LICENSE"}
@@ -40,8 +40,8 @@ sdist-include = [
 
 [tool.poetry]
 name = "pydomainextractor"
-version = "0.12.0"
-authors = ["Gal Ben David <gal@intsights.com>"]
+version = "0.13.8"
+authors = ["Viktor Vilskyi <viktor_vilskyi@rapid7.com>"]
 description = "A blazingly fast domain extraction library written in Rust"
 readme = "README.md"
 repository = "https://github.com/intsights/pydomainextractor"
