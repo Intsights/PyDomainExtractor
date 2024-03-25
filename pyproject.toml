@@ -1,7 +1,6 @@
 [project]
 name = "pydomainextractor"
 version = "0.13.8"
-description = "A blazingly fast domain extraction library written in Rust"
 authors = [
   {email = "viktor_vilskyi@rapid7.com"},
   {name = "Viktor Vilskyi"}
