@@ -59,11 +59,11 @@ jobs:
       - name: Test
         run: poetry run pytest -Werror tests
       - name: Install Cross-compilers (Linux)
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'macos-latest'
         run: |
           rustup target add aarch64-unknown-linux-gnu
       - name: Publish Linux (arm64) Package
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'macos-latest'
         uses: PyO3/maturin-action@v1
         with:
           command: build
