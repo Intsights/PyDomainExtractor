@@ -58,3 +58,12 @@ jobs:
         run: poetry run maturin develop
       - name: Test
         run: poetry run pytest -Werror tests
+  dist-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Distribute Source
+        uses: PyO3/maturin-action@v1
+        with:
+          command: sdist
+        env:
+          MATURIN_PASSWORD: ${{ secrets.pypi_password }}
