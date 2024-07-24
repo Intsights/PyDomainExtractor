@@ -3,6 +3,7 @@ use pyo3::exceptions::PyValueError;
 use pyo3::intern;
 use pyo3::prelude::*;
 use pyo3::types::PyString;
+use std::os::raw::c_char;
 
 type DomainString = arraystring::ArrayString<typenum::U255>;
 
@@ -144,7 +145,7 @@ impl DomainExtractor {
             ] {
                 if !fraction.is_empty() {
                     let substr = pyo3::ffi::PyUnicode_FromStringAndSize(
-                        fraction.as_ptr() as *const i8,
+                        fraction.as_ptr() as *const c_char,
                         fraction.len() as isize,
                     );
 
@@ -273,7 +274,7 @@ impl DomainExtractor {
             ] {
                 if !fraction.is_empty() {
                     let substr = pyo3::ffi::PyUnicode_FromStringAndSize(
-                        fraction.as_ptr() as *const i8,
+                        fraction.as_ptr() as *const c_char,
                         fraction.len() as isize,
                     );
 
