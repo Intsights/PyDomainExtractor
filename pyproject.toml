@@ -25,7 +25,7 @@ repository = "https://github.com/intsights/pydomainextractor"
 homepage = "https://github.com/intsights/pydomainextractor"
 
 [build-system]
-requires = ["maturin>=0.14,<0.15"]
+requires = ["maturin>=0.15,<0.16"]
 build-backend = "maturin"
 
 [tool.maturin]
