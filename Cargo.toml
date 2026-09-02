@@ -22,7 +22,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 ahash = "0.8"
-idna = "0.3"
+idna = "1.0.0"
 memchr = "2"
 arraystring = "0.3.0"
 typenum = "1"
