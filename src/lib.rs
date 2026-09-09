@@ -25,6 +25,7 @@ struct DomainExtractor {
 #[pymethods]
 impl DomainExtractor {
     #[new]
+    #[pyo3(signature = (suffix_list=None))]
     fn new(
         suffix_list: Option<&str>,
     ) -> Self {
@@ -120,11 +121,11 @@ impl DomainExtractor {
         }
     }
 
-    fn extract(
+    fn extract<'py>(
         &self,
-        py: Python,
-        domain: &PyString,
-    ) -> PyResult<PyObject> {
+        py: Python<'py>,
+        domain: &Bound<'_, PyString>,
+    ) -> PyResult<Bound<'py, PyAny>> {
         if domain.len().unwrap() > 255 {
             return Err(PyValueError::new_err("Invalid domain detected"));
         }
@@ -139,9 +140,9 @@ impl DomainExtractor {
         unsafe {
             let dict = pyo3::ffi::PyDict_New();
             for (fraction_key, fraction) in [
-                (intern!(py, "suffix").into_ptr(), suffix_part),
-                (intern!(py, "domain").into_ptr(), domain_part),
-                (intern!(py, "subdomain").into_ptr(), subdomain_part),
+                (intern!(py, "suffix").as_ptr(), suffix_part),
+                (intern!(py, "domain").as_ptr(), domain_part),
+                (intern!(py, "subdomain").as_ptr(), subdomain_part),
             ] {
                 if !fraction.is_empty() {
                     let substr = pyo3::ffi::PyUnicode_FromStringAndSize(
@@ -159,18 +160,18 @@ impl DomainExtractor {
                     pyo3::ffi::PyDict_SetItem(
                         dict,
                         fraction_key,
-                        intern!(py, "").into_ptr(),
+                        intern!(py, "").as_ptr(),
                     );
                 }
             }
 
-            Ok(pyo3::PyObject::from_owned_ptr(py, dict))
+            Ok(Bound::from_owned_ptr(py, dict))
         }
     }
 
     fn is_valid_domain(
         &self,
-        domain: &PyString,
+        domain: &Bound<'_, PyString>,
     ) -> bool {
         let domain_len = domain.len().unwrap();
         if domain_len == 0 || domain_len > 255 {
@@ -221,11 +222,11 @@ impl DomainExtractor {
         self.tld_list.clone()
     }
 
-    fn extract_from_url(
+    fn extract_from_url<'py>(
         &self,
-        py: Python,
-        url: &PyString,
-    ) -> PyResult<PyObject> {
+        py: Python<'py>,
+        url: &Bound<'_, PyString>,
+    ) -> PyResult<Bound<'py, PyAny>> {
         let mut url_str = url.to_str().unwrap();
 
         match memchr::memmem::find(url_str.as_bytes(), b"//") {
@@ -268,9 +269,9 @@ impl DomainExtractor {
         unsafe {
             let dict = pyo3::ffi::PyDict_New();
             for (fraction_key, fraction) in [
-                (intern!(py, "suffix").into_ptr(), suffix_part),
-                (intern!(py, "domain").into_ptr(), domain_part),
-                (intern!(py, "subdomain").into_ptr(), subdomain_part),
+                (intern!(py, "suffix").as_ptr(), suffix_part),
+                (intern!(py, "domain").as_ptr(), domain_part),
+                (intern!(py, "subdomain").as_ptr(), subdomain_part),
             ] {
                 if !fraction.is_empty() {
                     let substr = pyo3::ffi::PyUnicode_FromStringAndSize(
@@ -288,12 +289,12 @@ impl DomainExtractor {
                     pyo3::ffi::PyDict_SetItem(
                         dict,
                         fraction_key,
-                        intern!(py, "").into_ptr(),
+                        intern!(py, "").as_ptr(),
                     );
                 }
             }
 
-            Ok(pyo3::PyObject::from_owned_ptr(py, dict))
+            Ok(Bound::from_owned_ptr(py, dict))
         }
     }
 }
@@ -353,7 +354,7 @@ fn parse_suffix_list(
 #[pymodule]
 fn pydomainextractor(
     _py: Python,
-    m: &PyModule,
+    m: &Bound<'_, PyModule>,
 ) -> PyResult<()> {
     m.add_class::<DomainExtractor>()?;
     Ok(())
