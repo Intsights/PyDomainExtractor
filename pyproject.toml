@@ -10,7 +10,6 @@ license = {file = "LICENSE"}
 classifiers = [
   "License :: OSI Approved :: MIT License",
   "Operating System :: MacOS",
-  "Operating System :: Microsoft",
   "Operating System :: POSIX :: Linux",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -56,7 +55,6 @@ keywords = [
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: MacOS",
-    "Operating System :: Microsoft",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
