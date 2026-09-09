@@ -114,7 +114,7 @@ impl DomainExtractor {
             } else {
                 Ok((domain, "", ""))
             }
-        } else if current_suffixes.len() > 0 && current_suffixes.contains_key(current_fraction) {
+        } else if !current_suffixes.is_empty() && current_suffixes.contains_key(current_fraction) {
             Ok((domain, "", ""))
         } else {
             Ok((suffix_part, current_fraction, ""))
