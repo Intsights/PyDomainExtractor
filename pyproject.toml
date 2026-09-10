@@ -1,6 +1,6 @@
 [project]
 name = "pydomainextractor"
-version = "0.14.0"
+version = "0.14.2"
 authors = [
   {email = "viktor_vilskyi@rapid7.com"},
   {name = "Viktor Vilskyi"}
@@ -36,7 +36,7 @@ sdist-include = [
 
 [tool.poetry]
 name = "pydomainextractor"
-version = "0.14.0"
+version = "0.14.2"
 authors = ["Viktor Vilskyi <viktor_vilskyi@rapid7.com>"]
 description = "A blazingly fast domain extraction library written in Rust"
 readme = "README.md"
